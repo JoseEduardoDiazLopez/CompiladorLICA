@@ -1,0 +1,6 @@
+entero _a = verdadero
+1+1+_a-1*1
+inyector [1]
+rango (1,3)
+
+imprime(1){}
