@@ -420,10 +420,40 @@ gramatica.group("VALORES", " IDENTIFICADOR | VALOR");
         gramatica.group("METODO", "MET (parentesis_a ((VALORES | PARAMETROS) parentesis_c)|parentesis_a parentesis_c) (CODIGO_DF)*", true, 28, "error sintáctico {}: faltan llaves [#,%]");
         gramatica.group("METODO", "MET ( ((VALORES | PARAMETROS) parentesis_c)| parentesis_c) llaves_a (CODIGO_DF)*? llaves_c", true, 29, "error sintáctico {}: falta parentesis de apertura [#,%]");
         //gramatica.group("METODO", "MET (parentesis_a ((VALOR | PARAMETROS) )| parentesis_a) llaves_a (CODIGO_DF)*? llaves_c", true, 30, "error sintáctico {}: falta parentesis de cierre [#,%]");
-        gramatica.group("METODO", "MET (VALORES | PARAMETROS) llaves_a (CODIGO_DF)*? llaves_c", true, 31, "error sintáctico {}: faltan parentesis [#,%]");
+     
            
            
-          
+            gramatica.group("CODIGO_DF", "(FUNCIONES | VARIABLE | ENTI | ENTIDADES_COMP)", true);
+               gramatica.group("METODO", "MET (VALORES | PARAMETROS) llaves_a (CODIGO_DF)*? llaves_c", true, 31, "error sintáctico {}: faltan parentesis [#,%]");
+
+            
+        //definir estructura condición-----------------------
+        gramatica.group("CONDICION_D", "(VALORES | identificador) ((operador_logico | operador_relacional) (VALOR | identificador))+ ");
+        gramatica.group("CONDICION_D", "(VALORES | identificador) ((operador_logico | operador_relacional) )+ ", true, 32, "error sintáctico {}: faltan un operador [#,%]");
+        gramatica.group("CONDICION_D", " ((operador_logico | operador_relacional) (VALOR | identificador))+ ", true, 33, "error sintáctico {}: faltan un operador [#,%]");
+        //gramatica.group("CONDICION", "parentesis_a CONDICION_D parentesis_c");
+
+        //Definir si
+        gramatica.group("E_SI", "(reservada_si | reservada_no | reservada_si_no | reservada_mientras)");
+        gramatica.group("SI", "E_SI parentesis_a CONDICION_D parentesis_c llaves_a (CODIGO_DF)*? llaves_c");
+        gramatica.group("SI", "E_SI parentesis_a CONDICION_D parentesis_c (CODIGO_DF)*? llaves_c", true, 34, "error sintáctico {}: faltan las llaves de apertura [#,%]");
+        gramatica.group("SI", "E_SI parentesis_a CONDICION_D parentesis_c llaves_a (CODIGO_DF)*", true, 35, "error sintáctico {}: faltan las llaves de cierre [#,%]");
+        //gramatica.group("SI","E_SI parentesis_a CONDICION_D parentesis_c (CODIGO_DF)*",true,15,"error sintáctico {}: faltan las llaves [#,%]");
+        gramatica.group("SI", "E_SI CONDICION_D llaves_a (CODIGO_DF)*? llaves_c", true, 36, "error sintáctico {}: faltan parentesis [#,%]");
+        gramatica.group("SI", "E_SI CONDICION_D parentesis_c llaves_a (CODIGO_DF)*? llaves_c", true, 37, "error sintáctico {}: faltan el parentesis de apertura [#,%]");
+        gramatica.group("SI", "E_SI parentesis_a CONDICION_D llaves_a (CODIGO_DF)*? llaves_c", true, 38, "error sintáctico {}: faltan el parentesis de cierre [#,%]");
+
+        //
+        gramatica.group("INCDEC", "identificador operador_aritmetico operador_aritmetico ");
+        //definir ciclo
+        gramatica.group("CONDICION_CICLO", "identificador doblePunto VALOR puntoYcoma CONDICION_D puntoYcoma INCDEC");
+        gramatica.group("CICLO_H", "reservada_ciclo parentesis_a CONDICION_CICLO parentesis_c llaves_a (CODIGO_DF)*? llaves_c");
+        gramatica.group("CICLO_H", "reservada_ciclo CONDICION_CICLO parentesis_c llaves_a (CODIGO_DF)*? llaves_c", true, 39, "error sintáctico {}: faltan el parentesis de apertura [#,%]");
+        gramatica.group("CICLO_H", "reservada_ciclo parentesis_a CONDICION_CICLO llaves_a (CODIGO_DF)*? llaves_c", true, 40, "error sintáctico {}: faltan el parentesis de cierre [#,%]");
+        gramatica.group("CICLO_H", "reservada_ciclo parentesis_a CONDICION_CICLO parentesis_c (CODIGO_DF)*? llaves_c", true, 41, "error sintáctico {}: falta la llave de apertura [#,%]");
+        gramatica.group("CICLO_H", "reservada_ciclo parentesis_a CONDICION_CICLO parentesis_c llaves_a (CODIGO_DF)*? ", true, 42, "error sintáctico {}: falta la llave de cierre [#,%]");
+        gramatica.group("CICLO_H", "reservada_ciclo CONDICION_CICLO llaves_a (CODIGO_DF)*? ", true, 43, "error sintáctico {}: faltan parentesis [#,%]");
+        gramatica.group("CICLO_H", "reservada_ciclo parentesis_a CONDICION_CICLO parentesis_c (CODIGO_DF)*?", true, 44, "error sintáctico {}: falta las llaves [#,%]");
            
         /* Mostrar gramáticas */
         gramatica.show();
