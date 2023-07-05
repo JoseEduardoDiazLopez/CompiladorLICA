@@ -339,7 +339,7 @@ public class Compilador extends javax.swing.JFrame {
            
        //ENTIDADES-----------
        
-    gramatica.group("ENTIDADES_COMP", "ENTIDADES corchete_a VALOR corchete_c", true);
+    gramatica.group("ENTIDADES_COMPZ", "ENTIDADES corchete_a VALOR corchete_c", true);
         
         gramatica.group("ENTIDADES_COMP", "ENTIDADES VALOR corchete_c", true, 9, "error sintáctico {}: falta el corchete de apertura [#,%]");
         gramatica.finalLineColumn();
@@ -361,16 +361,17 @@ public class Compilador extends javax.swing.JFrame {
    
    //-----------------------------------------------------
 //operaciones
-gramatica.group("VALORES", " IDENTIFICADOR | VALOR");
+gramatica.group("VALORES", "identificador | VALOR");
 
- gramatica.group("OPERACIONES"," TIPO? identificador operador_asignacion VALORES OPERADOR VALORES",true); 
+ gramatica.group("OPERACIONES","VALORES operador_asignacion VALORES OPERADOR VALORES",true); 
+  gramatica.group("OPERACIONEU","VALORES operador_asignacion VALORES",true); 
  
     //falta de primer operador
-  gramatica.group("OPERACIONES"," (identificador operador_asignacion VALORES OPERADOR)",true,7,"Error sintáctico {}: falta un operando en la operacion en:[#,%]");
+  gramatica.group("OPERACIONES"," (VALORES operador_asignacion VALORES OPERADOR)",true,7,"Error sintáctico {}: falta un operando en la operacion en:[#,%]");
           // falta segundo operador (error en operaciones impares) 
- gramatica.group("OPERACIONES","(operador_asignacion VALORES OPERADOR VALORES)",true,8,"Error sintáctico {}: falta el identificador en:[#,%]");
+// gramatica.group("OPERACIONES","(operador_asignacion VALORES OPERADOR VALORES)",true,8,"Error sintáctico {}: falta el identificador en:[#,%]");
   
-   gramatica.group("OPERACIONES","(identificador VALORES OPERADOR VALORES )",true,8,"Error sintáctico {}: falta el operador de asignacion en:[#,%]");
+   gramatica.group("OPERACIONES","(VALORES VALORES OPERADOR VALORES )",true,8,"Error sintáctico {}: falta el operador de asignacion en:[#,%]");
  
  //RANGO-------------------_____
  
@@ -407,7 +408,7 @@ gramatica.group("VALORES", " IDENTIFICADOR | VALOR");
             
            //FUNCIONES /// COMPLETAR.-----
            
-            gramatica.group("FUNCION", "reservada_imprime | conversion | reservada_leer");
+        gramatica.group("FUNCION", "reservada_imprime | conversion | reservada_leer");
         gramatica.group("FUNCIONES", "FUNCION parentesis_a (VALORES | (VALORES coma VALORES)+) parentesis_c", true);
         gramatica.group("FUNCIONES", "FUNCION parentesis_a parentesis_c", true, 25, "error sintáctico {}: faltan parametros [#,%]");
         gramatica.group("FUNCIONES", "FUNCION (VALORES | (VALORES coma VALORES)+) parentesis_c", true, 26, "error sintáctico {}: falta el parentesis de apertura [#,%]");
@@ -416,7 +417,7 @@ gramatica.group("VALORES", " IDENTIFICADOR | VALOR");
         
         //-------------------
         
-         gramatica.group("CODIGO_DF", "(DECLARAR_VARIABLE | OPERACIONES)", true);
+         gramatica.group("CODIGO_DF", "(DECLARAR_VARIABLE | OPERACIONES | OPERACIONEU | RANGO | FUNCION | ENTIDADES_COMPZ)", true);
          
         gramatica.group("MET", "reservada_inicio | reservada_principal | reservada_funcion");
         

@@ -1,8 +1,13 @@
 principal(){
 
-entero _a = 1
-entero  _b= 2
-torque _a=1-1
+entero _a=5
 
+ _b =_a+1
+
+rango (2,3)
+
+aceite[1]
 }
+
+
 
