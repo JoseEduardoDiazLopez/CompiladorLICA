@@ -524,25 +524,12 @@ gramatica.group("VALORES", "identificador | VALOR");
             
             for (Production id : identProd) {
     if (identificadores.containsKey(id.lexemeRank(1))) {
-        errors.add(new ErrorLSSL(3, "Error semántico {}: Variable ya declarada [#, %]", id, false));
+        errors.add(new ErrorLSSL(2, "Error semántico {}: Variable ya declarada [#, %]", id, false));
     } else {
         identificadores.put(id.lexemeRank(1), id.lexemeRank(-1));
     }}
             
-            for(Production asi: asigprod) {
-                
-            if(!identDataType.get(asi.lexemeRank(0)).equals(identificadores.get(1))) {
-                errors.add(new ErrorLSSL(2, "Error semántico {}: no se peude asignar este tipo de dato [#, %]",asi,true));
-            }/*else if(identDataType.get(id.lexemeRank(0)).equals("dato_fecha") && !id.lexemeRank(-1).matches("'[0-9][0-9]/[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9]'")) {
-                errors.add(new ErrorLSSL(2, "Error semántico {}: La fecha no tiene el formato correcto [#, %]",id,false));
-            
-            }*/else {
-                identificadores.put(asi.lexemeRank(0), asi.lexemeRank(-1));
-            }
-            
-            System.out.println(asi.lexemeRank(0)+" : "+ asi.lexicalCompRank(-1));
-            
-        }//for asiprod
+         
         
         //Analisis de entidades 
         for(Production id: entProd) {
