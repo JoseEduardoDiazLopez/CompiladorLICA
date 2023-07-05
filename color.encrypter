@@ -1,6 +1,8 @@
-entero _a = verdadero
-1+1+_a-1*1
-inyector [1]
-rango (1,3)
+principal(){
 
-imprime(1){}
+entero _a = 1
+entero  _b= 2
+torque _a=1-1
+
+}
+
