@@ -319,15 +319,15 @@ public class Compilador extends javax.swing.JFrame {
         
           
            /* declarar variable */
-           gramatica.group("DECLARAR_VARIABLE","TIPO identificador operador_asignacion VALOR | OPERACIONES",true);
+           gramatica.group("DECLARAR_VARIABLE","TIPO identificador operador_asignacion VALOR",true);
            //No !
            gramatica.group("DECLARAR_VARIABLE","TIPO identificador operador_asignacion",true,
                    2,"Error sintáctico {}: falta el valor en la declaracion de variable en:[#,%]");
            // no identificador
-        gramatica.group("DECLARAR_VARIABLE","TIPO operador_asignacion VALOR | OPERACIONES",true,
+        gramatica.group("DECLARAR_VARIABLE","TIPO operador_asignacion VALOR",true,
                    3,"Error sintáctico {}: falta el IDENTIFICADOR en la declaracion de variable en:[#,%]");
         //no asignacion
-         gramatica.group("DECLARAR_VARIABLE","TIPO identificador VALOR | OPERACIONES",true,
+         gramatica.group("DECLARAR_VARIABLE","TIPO identificador VALOR",true,
                    4,"Error sintáctico {}: falta el identificador en la declaracion de variable en:[#,%]");
             // no tipo de dato
           // gramatica.group("DECLARAR_VARIABLE"," identificador operador_asignacion VALOR | OPERACIONES",true,
@@ -363,7 +363,7 @@ public class Compilador extends javax.swing.JFrame {
 //operaciones
 gramatica.group("VALORES", " IDENTIFICADOR | VALOR");
 
- gramatica.group("OPERACIONES"," TIPO? identificador operador_asignacion VALORES OPERADOR VALORES)",true); 
+ gramatica.group("OPERACIONES"," TIPO? identificador operador_asignacion VALORES OPERADOR VALORES",true); 
  
     //falta de primer operador
   gramatica.group("OPERACIONES"," (identificador operador_asignacion VALORES OPERADOR)",true,7,"Error sintáctico {}: falta un operando en la operacion en:[#,%]");

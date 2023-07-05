@@ -57,7 +57,7 @@ raiz | exp { return token(yytext(), "funcion_dos", yyline, yycolumn); }
 tan | sen | cos { return token(yytext(), "funcion_trig", yyline, yycolumn); }
 
 //Componentes léxicos para la estructura principal del programa
-inicio { return token(yytext(), "reservada_inicio", yyline, yycolumn); }
+f { return token(yytext(), "reservada_inicio", yyline, yycolumn); }
 fin { return token(yytext(), "reservada_fin", yyline, yycolumn); }
 principal { return token(yytext(), "reservada_principal", yyline, yycolumn); }
 
@@ -126,7 +126,7 @@ motor | ventilador | motor_arranque | acelerador | coolant | montadora |volt | m
 
 "." { return token(yytext(), "punto", yyline, yycolumn); }
 "," { return token(yytext(), "coma", yyline, yycolumn); }
-";" { return token(yytext(), "puntoYcoma", yyline, yycolumn); }
+
 ":" { return token(yytext(), "doblePunto", yyline, yycolumn); }
 
 
