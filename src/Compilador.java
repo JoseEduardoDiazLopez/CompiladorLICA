@@ -443,12 +443,11 @@ gramatica.group("VALORES", "identificador | VALOR");
         gramatica.group("METODO", "MET (VALORES | PARAMETROS) llaves_a (CODIGO_DF)*? llaves_c", true, 31, "error sintáctico {}: faltan parentesis [#,%]");
            
            
-           // gramatica.group("CODIGO_DF", "(FUNCIONES | VARIABLE | ENTI | ENTIDADES_COMP)", true);
-              
+         
 
             
         //definir estructura condición-----------------------
-        gramatica.group("CONDICION_D", "(VALORES | identificador) ((operador_logico | operador_relacional) (VALOR | identificador))+ ");
+        gramatica.group("CONDICION_D1", "reservada_si parentesis_a VALORES OPERADOR VALORES parentesis_c doblePunto (CODIGO_DF)* doblePunto");
         gramatica.group("CONDICION_D", "(VALORES | identificador) ((operador_logico | operador_relacional) )+ ", true, 32, "error sintáctico {}: faltan un operador [#,%]");
         gramatica.group("CONDICION_D", " ((operador_logico | operador_relacional) (VALOR | identificador))+ ", true, 33, "error sintáctico {}: faltan un operador [#,%]");
         //gramatica.group("CONDICION", "parentesis_a CONDICION_D parentesis_c");
@@ -480,6 +479,7 @@ gramatica.group("VALORES", "identificador | VALOR");
     }
 
     private void semanticAnalysis() {
+        
     }
 
     private void colorAnalysis() {
