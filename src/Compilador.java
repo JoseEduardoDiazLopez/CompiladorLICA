@@ -319,18 +319,18 @@ public class Compilador extends javax.swing.JFrame {
         
           
            /* declarar variable */
-           gramatica.group("DECLARAR_VARIABLE","TIPO identificador operador_asignacion VALOR",true);
+           gramatica.group("DECLARAR_VARIABLE","TIPO identificador operador_asignacion VALOR | OPERACIONES",true);
            //No !
-           gramatica.group("DECLARAR_ENTERO","TIPO identificador operador_asignacion",true,
+           gramatica.group("DECLARAR_VARIABLE","TIPO identificador operador_asignacion",true,
                    2,"Error sintáctico {}: falta el valor en la declaracion de variable en:[#,%]");
            // no identificador
-        gramatica.group("DECLARAR_ENTERO","TIPO operador_asignacion VALOR",true,
+        gramatica.group("DECLARAR_VARIABLE","TIPO operador_asignacion VALOR | OPERACIONES",true,
                    3,"Error sintáctico {}: falta el IDENTIFICADOR en la declaracion de variable en:[#,%]");
         //no asignacion
-         gramatica.group("DECLARAR_ENTERO","TIPO identificador VALOR",true,
+         gramatica.group("DECLARAR_VARIABLE","TIPO identificador VALOR | OPERACIONES",true,
                    4,"Error sintáctico {}: falta el identificador en la declaracion de variable en:[#,%]");
             // no tipo de dato
-           gramatica.group("DECLARAR_ENTERO"," identificador operador_asignacion VALOR",true,
+           gramatica.group("DECLARAR_VARIABLE"," identificador operador_asignacion VALOR | OPERACIONES",true,
                    5,"Error sintáctico {}: falta el valor en la declaracion de variable en:[#,%]");  
            //gramatica.delete("TIPO",34,"Error sintáctico {}: se espera la estructura (tipo de dato)(identificador)(=)(valor) (Linea: # )");
            gramatica.delete("TIPO",6,"Error sintáctico {}: se espera la estructura (tipo de dato)(identificador)(=)(valor) (Linea: # )");
@@ -362,12 +362,12 @@ public class Compilador extends javax.swing.JFrame {
 //operaciones
 gramatica.group("VALORES", " IDENTIFICADOR | VALOR");
 
- gramatica.group("OPERACIONES"," VALORES (OPERADOR VALORES)+",true); 
+ gramatica.group("OPERACIONES"," VALORES OPERADOR VALORES",true); 
  
     //falta de primer operador
   gramatica.group("OPERACIONES"," VALORES OPERADOR",true,7,"Error sintáctico {}: falta un operando en la operacion en:[#,%]");
           // falta segundo operador (error en operaciones impares) 
- gramatica.group("OPERACIONES"," OPERADOR VALORES",true,8,"Error sintáctico {}: falta un valor en la operacion en:[#,%]");
+ //gramatica.group("OPERACIONES"," OPERADOR VALORES",true,8,"Error sintáctico {}: falta un valor en la operacion en:[#,%]");
   
    
  
@@ -402,29 +402,47 @@ gramatica.group("VALORES", " IDENTIFICADOR | VALOR");
        // gramatica.group("ENTI", "ENT (FUNCIONES | RANGO)", true, 32, "error sintáctico {}: el punto para llamar metodo[#,%]");
  
  
-            gramatica.group("PARAMETROS", "VALORES (COMA VALORES)+");
+       
             
            //FUNCIONES /// COMPLETAR.-----
            
             gramatica.group("FUNCION", "reservada_imprime | conversion | reservada_leer");
-        gramatica.group("FUNCIONES", "FUNCION parentesis_a (VALORES | PARAMETROS) parentesis_c llaves_a (CODIGO_DF)*? llaves_c", true);
-        gramatica.group("FUNCIONES", "FUNCION parentesis_a parentesis_c llaves_a (CODIGO_DF)*? llaves_c", true, 25, "error sintáctico {}: faltan parametros [#,%]");
-        gramatica.group("FUNCIONES", "FUNCION (VALORES | PARAMETROS)? parentesis_c", true, 26, "error sintáctico {}: falta el parentesis de apertura [#,%]");
-        gramatica.group("FUNCIONES", "FUNCION parentesis_a (VALORES | PARAMETROS)", true, 27, "error sintáctico {}: falta el parentesis de cierre [#,%]");
+        gramatica.group("FUNCIONES", "FUNCION parentesis_a (VALORES | (VALORES coma VALORES)+) parentesis_c", true);
+        gramatica.group("FUNCIONES", "FUNCION parentesis_a parentesis_c", true, 25, "error sintáctico {}: faltan parametros [#,%]");
+        gramatica.group("FUNCIONES", "FUNCION (VALORES | (VALORES coma VALORES)+) parentesis_c", true, 26, "error sintáctico {}: falta el parentesis de apertura [#,%]");
+        gramatica.group("FUNCIONES", "FUNCION parentesis_a (VALORES | (VALORES coma VALORES)+)", true, 27, "error sintáctico {}: falta el parentesis de cierre [#,%]");
 
+        
+        //-------------------
+        
+         gramatica.group("CODIGO_DF", "(DECLARAR_VARIABLE | OPERACIONES)", true);
+         
         gramatica.group("MET", "reservada_inicio | reservada_principal | reservada_funcion");
         
-        gramatica.group("METODO", "MET (parentesis_a ((VALORES | PARAMETROS) parentesis_c)|parentesis_a parentesis_c) llaves_a (CODIGO_DF)*? llaves_c", true);
-        gramatica.group("METODO", "MET (parentesis_a ((VALORES | PARAMETROS) parentesis_c)|parentesis_a parentesis_c) (CODIGO_DF)*? llaves_c", true, 31, "error sintáctico {}: falta la llave de apertura [#,%]");
-        gramatica.group("METODO", "MET (parentesis_a ((VALORES | PARAMETROS) parentesis_c)|parentesis_a parentesis_c) llaves_a (CODIGO_DF)*", true, 30, "error sintáctico {}: falta la llave de cierre [#,%]");
-        gramatica.group("METODO", "MET (parentesis_a ((VALORES | PARAMETROS) parentesis_c)|parentesis_a parentesis_c) (CODIGO_DF)*", true, 28, "error sintáctico {}: faltan llaves [#,%]");
-        gramatica.group("METODO", "MET ( ((VALORES | PARAMETROS) parentesis_c)| parentesis_c) llaves_a (CODIGO_DF)*? llaves_c", true, 29, "error sintáctico {}: falta parentesis de apertura [#,%]");
-        //gramatica.group("METODO", "MET (parentesis_a ((VALOR | PARAMETROS) )| parentesis_a) llaves_a (CODIGO_DF)*? llaves_c", true, 30, "error sintáctico {}: falta parentesis de cierre [#,%]");
-     
+        gramatica.loopForFunExecUntilChangeNotDetected(()->{
+ gramatica.group("METODO","MET parentesis_a parentesis_a parentesis_c llaves_a CODIGO_DF llaves_c", true);
+        });
+              gramatica.loopForFunExecUntilChangeNotDetected(()->{ 
+                  gramatica.initialLineColumn();
+                  gramatica.group("METODO", "MET parentesis_a parentesis_a parentesis_c llaves_a CODIGO_DF", true, 30, "error sintáctico {}: falta la llave de cierre [#,%]");
+                  gramatica.finalLineColumn();
+                   gramatica.group("METODO", "MET parentesis_a parentesis_a parentesis_c CODIGO_DF llaves_c", true, 31, "error sintáctico {}: falta la llave de apertura [#,%]");
+              
+                   gramatica.group("CODIGO_DF","CODIGO_DF");
+              
+              });
+        
+        /*gramatica.group("METODO", "MET parentesis_a });parentesis_a parentesis_c llaves_a (CODIGO_DF)*? llaves_c", true);
+        gramatica.group("METODO", "MET parentesis_a parentesis_a parentesis_c (CODIGO_DF)*? llaves_c", true, 31, "error sintáctico {}: falta la llave de apertura [#,%]");
+        gramatica.group("METODO", "MET parentesis_a parentesis_a parentesis_c llaves_a (CODIGO_DF)*", true, 30, "error sintáctico {}: falta la llave de cierre [#,%]");
+        //gramatica.group("METODO", "MET parentesis_a parentesis_c (CODIGO_DF)*?", true, 28, "error sintáctico {}: faltan llaves [#,%]");
+        gramatica.group("METODO", "MET parentesis_c llaves_a (CODIGO_DF)*? llaves_c", true, 29, "error sintáctico {}: falta parentesis de apertura [#,%]");
+        gramatica.group("METODO", "MET parentesis_allaves_a (CODIGO_DF)*? llaves_c", true, 30, "error sintáctico {}: falta parentesis de cierre [#,%]");
+        gramatica.group("METODO", "MET (VALORES | PARAMETROS) llaves_a (CODIGO_DF)*? llaves_c", true, 31, "error sintáctico {}: faltan parentesis [#,%]");
+           */
            
-           
-            gramatica.group("CODIGO_DF", "(FUNCIONES | VARIABLE | ENTI | ENTIDADES_COMP)", true);
-               gramatica.group("METODO", "MET (VALORES | PARAMETROS) llaves_a (CODIGO_DF)*? llaves_c", true, 31, "error sintáctico {}: faltan parentesis [#,%]");
+           // gramatica.group("CODIGO_DF", "(FUNCIONES | VARIABLE | ENTI | ENTIDADES_COMP)", true);
+              
 
             
         //definir estructura condición-----------------------
