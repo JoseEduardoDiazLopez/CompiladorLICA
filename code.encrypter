@@ -8,5 +8,5 @@ principal() {
  kilometraje _trq = 10
 giro _gir=5
 cadena _cad = 'hola'
-booleano _bol = verdadero
+booleano _bol = 2
 }
