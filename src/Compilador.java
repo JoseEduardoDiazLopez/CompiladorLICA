@@ -37,7 +37,7 @@ public class Compilador extends javax.swing.JFrame {
     private ArrayList<ErrorLSSL> errors;
     private ArrayList<TextColor> textsColor;
     private Timer timerKeyReleased;
-    private ArrayList<Production> identProd;
+    private ArrayList<Production> identProd,aritProd,entProd;
     private HashMap<String, String> identificadores;
     private boolean codeHasBeenCompiled = false;
 
@@ -339,7 +339,7 @@ public class Compilador extends javax.swing.JFrame {
            
        //ENTIDADES-----------
        
-    gramatica.group("ENTIDADES_COMPZ", "ENTIDADES corchete_a VALOR corchete_c", true);
+    gramatica.group("ENTIDADES_COMPZ", "ENTIDADES corchete_a VALOR corchete_c", true,entProd);
         
         gramatica.group("ENTIDADES_COMP", "ENTIDADES VALOR corchete_c", true, 9, "error sintáctico {}: falta el corchete de apertura [#,%]");
         gramatica.finalLineColumn();
@@ -480,6 +480,9 @@ gramatica.group("VALORES", "identificador | VALOR");
 
     private void semanticAnalysis() {
         System.out.println("Anális semántico:" + identProd.size());
+        
+        //Analisis semántico para las declaraciones de variables 
+        
         //HashMap que tiene como clave el lexema y valor el tipo de dato valido
         HashMap<String, String> identDataType = new HashMap<>();
         //Para las cadenas
@@ -502,10 +505,8 @@ gramatica.group("VALORES", "identificador | VALOR");
         
         identDataType.put("booleano", "dato_bol");
         
-        
-        
-        
-        for(Production id: identProd) {
+        try{
+            for(Production id: identProd) {
             if(!identDataType.get(id.lexemeRank(0)).equals(id.lexicalCompRank(-1))) {
                 errors.add(new ErrorLSSL(1, "Error semántico {}: Valor no compatible con el tipo de dato [#, %]",id,true));
             }/*else if(identDataType.get(id.lexemeRank(0)).equals("dato_fecha") && !id.lexemeRank(-1).matches("'[0-9][0-9]/[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9]'")) {
@@ -514,9 +515,21 @@ gramatica.group("VALORES", "identificador | VALOR");
                 identificadores.put(id.lexemeRank(1), id.lexemeRank(-1));
             }
             
-            System.out.println(id.lexemeRank(0)+" : "+ id.lexicalCompRank(-1));
+            System.out.println(id.lexemeRank(1)+" : "+ id.lexicalCompRank(-1));
             
         }//for identProd
+        
+        //Analisis de entidades 
+        for(Production id: entProd) {
+            //System.out.println(id.lexemeRank(0,-1));
+            //System.out.println(id.lexicalCompRank(0,-1));
+            System.out.println(id);
+        }
+        }catch(Exception ex){
+            System.out.println("NullPointerException");
+        }
+        
+        
 
     }
 
