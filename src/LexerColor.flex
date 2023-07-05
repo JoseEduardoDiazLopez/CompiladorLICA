@@ -107,10 +107,10 @@ motor | ventilador | motor_arranque | acelerador | coolant | montadora | modelo 
 
 
 
-"_"{Identificador} { /*Ignorar*/ }
-{Identificador} | 0{Digito} | {Digito}+"."(".")+(Digito)* { /*Ignorar*/ }
-{Digito}+ { /*Ignorar*/ }
-({Digito}+)"."({Digito}+) { /*Ignorar*/ }
+"_"{Identificador} { return textColor(yychar, yylength(), new Color(0,255, 255)); }
+{Identificador} | 0{Digito} | {Digito}+"."(".")+(Digito)* { return textColor(yychar, yylength(), new Color(0,255, 255)); }
+{Digito}+ { return textColor(yychar, yylength(), new Color(255,255, 255)); }
+({Digito}+)"."({Digito}+) { return textColor(yychar, yylength(), new Color(255,255, 255)); }
 
 "." { /*Ignorar*/ }
 
