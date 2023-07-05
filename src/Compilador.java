@@ -372,7 +372,7 @@ gramatica.group("VALORES", " IDENTIFICADOR | VALOR");
   
    gramatica.group("OPERACIONES","(identificador VALORES OPERADOR VALORES )",true,8,"Error sintáctico {}: falta el operador de asignacion en:[#,%]");
  
- //RANGO-------------------
+ //RANGO-------------------_____
  
  gramatica.group("RANGO", "rango_entidad parentesis_a VALORES coma VALORES parentesis_c", true);
         
