@@ -37,7 +37,7 @@ public class Compilador extends javax.swing.JFrame {
     private ArrayList<ErrorLSSL> errors;
     private ArrayList<TextColor> textsColor;
     private Timer timerKeyReleased;
-    private ArrayList<Production> identProd,aritProd,entProd;
+    private ArrayList<Production> identProd,aritProd,entProd,asigprod;
     private HashMap<String, String> identificadores;
     private boolean codeHasBeenCompiled = false;
 
@@ -103,7 +103,7 @@ public class Compilador extends javax.swing.JFrame {
         rootPanel.setBackground(new java.awt.Color(102, 102, 102));
 
         jtpCode.setBackground(new java.awt.Color(51, 51, 51));
-        jtpCode.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
+        jtpCode.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jtpCode.setForeground(new java.awt.Color(255, 255, 255));
         jtpCode.setDisabledTextColor(new java.awt.Color(255, 255, 255));
         jScrollPane1.setViewportView(jtpCode);
@@ -364,7 +364,8 @@ public class Compilador extends javax.swing.JFrame {
 gramatica.group("VALORES", "identificador | VALOR");
 
  gramatica.group("OPERACIONES","VALORES operador_asignacion VALORES OPERADOR VALORES",true); 
-  gramatica.group("OPERACIONEU","VALORES operador_asignacion VALORES",true); 
+ 
+  gramatica.group("OPERACIONEU","VALORES operador_asignacion VALORES",true, asigprod); 
  
     //falta de primer operador
   gramatica.group("OPERACIONES"," (VALORES operador_asignacion VALORES OPERADOR)",true,7,"Error sintáctico {}: falta un operando en la operacion en:[#,%]");
@@ -508,9 +509,10 @@ gramatica.group("VALORES", "identificador | VALOR");
         try{
             for(Production id: identProd) {
             if(!identDataType.get(id.lexemeRank(0)).equals(id.lexicalCompRank(-1))) {
-                errors.add(new ErrorLSSL(1, "Error semántico {}: Valor no compatible con el tipo de dato [#, %]",id,true));
+                errors.add(new ErrorLSSL(1, "Error semántico {}: Valor no compatible es con el tipo de dato [#, %]",id,true));
             }/*else if(identDataType.get(id.lexemeRank(0)).equals("dato_fecha") && !id.lexemeRank(-1).matches("'[0-9][0-9]/[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9]'")) {
                 errors.add(new ErrorLSSL(2, "Error semántico {}: La fecha no tiene el formato correcto [#, %]",id,false));
+            
             }*/else {
                 identificadores.put(id.lexemeRank(1), id.lexemeRank(-1));
             }
@@ -518,14 +520,38 @@ gramatica.group("VALORES", "identificador | VALOR");
             System.out.println(id.lexemeRank(1)+" : "+ id.lexicalCompRank(-1));
             
         }//for identProd
+            
+            
+            for (Production id : identProd) {
+    if (identificadores.containsKey(id.lexemeRank(1))) {
+        errors.add(new ErrorLSSL(3, "Error semántico {}: Variable ya declarada [#, %]", id, false));
+    } else {
+        identificadores.put(id.lexemeRank(1), id.lexemeRank(-1));
+    }}
+            
+            for(Production asi: asigprod) {
+                
+            if(!identDataType.get(asi.lexemeRank(0)).equals(identificadores.get(1))) {
+                errors.add(new ErrorLSSL(2, "Error semántico {}: no se peude asignar este tipo de dato [#, %]",asi,true));
+            }/*else if(identDataType.get(id.lexemeRank(0)).equals("dato_fecha") && !id.lexemeRank(-1).matches("'[0-9][0-9]/[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9]'")) {
+                errors.add(new ErrorLSSL(2, "Error semántico {}: La fecha no tiene el formato correcto [#, %]",id,false));
+            
+            }*/else {
+                identificadores.put(asi.lexemeRank(0), asi.lexemeRank(-1));
+            }
+            
+            System.out.println(asi.lexemeRank(0)+" : "+ asi.lexicalCompRank(-1));
+            
+        }//for asiprod
         
         //Analisis de entidades 
         for(Production id: entProd) {
             //System.out.println(id.lexemeRank(0,-1));
-            //System.out.println(id.lexicalCompRank(0,-1));
+           // System.out.println(id.lexicalCompRank(0,-1));
             System.out.println(id);
         }
         }catch(Exception ex){
+            
             System.out.println("NullPointerException");
         }
         
