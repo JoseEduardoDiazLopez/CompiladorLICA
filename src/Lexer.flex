@@ -45,8 +45,7 @@ booleano { return token(yytext(), "dato_booleano", yyline, yycolumn); }
 '({Letra}|{Digito}|{EspacioEnBlanco})*' {return token(yytext(), "valor_cadena", yyline, yycolumn); }
 
 // los valores booleanos
-verdadero { return token(yytext(), "bool_v", yyline, yycolumn); }
-falso { return token(yytext(), "bool_f", yyline, yycolumn); }
+verdadero | falso { return token(yytext(), "dato_bol", yyline, yycolumn); }
 
 //conversiones entero a flotante - flotante entero
 converFlot | converEnt { return token(yytext(), "conversion", yyline, yycolumn); }

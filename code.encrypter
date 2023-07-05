@@ -1,13 +1,12 @@
-principal(){
-
-entero _a=5
-
- _b =_a+1
-
-rango (2,3)
-
-aceite[1]
+principal() {
+ torque _trq = 10
+ entero _trq = 10
+ potencia _trq = 10
+ rotacion _trq = 10
+ velocidad _trq = 10
+ presion _trq = 10
+ kilometraje _trq = 10
+giro _gir=5
+cadena _cad = 'hola'
+booleano _bol = verdadero
 }
-
-
-

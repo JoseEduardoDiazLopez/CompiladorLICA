@@ -312,14 +312,14 @@ public class Compilador extends javax.swing.JFrame {
           
             /* agrupar valores */
       
-            gramatica.group("VALOR","numero_decimal | valor_cadena | bool_v | bool_f | numero_entero",true);
+            gramatica.group("VALOR","numero_decimal | valor_cadena | dato_bol | numero_entero",true);
             gramatica.group("OPERADOR","operador_suma| operador_resta| operador_multiplicacion | operador_division | operador_and | operador_or | operador_diferente");
             gramatica.group("TIPO","dato_cadena | dato_entero | dato_entero | dato_fecha | dato_booleano",true);
             gramatica.group("ENTIDADES", "entidades");
         
           
            /* declarar variable */
-           gramatica.group("DECLARAR_VARIABLE","TIPO identificador operador_asignacion VALOR",true);
+           gramatica.group("DECLARAR_VARIABLE","TIPO identificador operador_asignacion VALOR",true, identProd);
            //No !
            gramatica.group("DECLARAR_VARIABLE","TIPO identificador operador_asignacion",true,
                    2,"Error sintáctico {}: falta el valor en la declaracion de variable en:[#,%]");
@@ -480,6 +480,44 @@ gramatica.group("VALORES", "identificador | VALOR");
     }
 
     private void semanticAnalysis() {
+        System.out.println("Anális semántico:" + identProd.size());
+        //HashMap que tiene como clave el lexema y valor el tipo de dato valido
+        HashMap<String, String> identDataType = new HashMap<>();
+        //Para las cadenas
+        identDataType.put("cadena", "valor_cadena");
+        identDataType.put("fecha", "valor_cadena");
+        //Para tipos de dato que reciben enteros
+        identDataType.put("torque", "numero_entero");
+        identDataType.put("entero", "numero_entero");
+        identDataType.put("potencia", "numero_entero");
+        identDataType.put("rotacion", "numero_entero");
+        identDataType.put("velocidad", "numero_entero");
+        identDataType.put("presion", "numero_entero");
+        identDataType.put("kilometraje", "numero_entero");
+        identDataType.put("giro", "numero_entero");
+        //Para tipos de dato que reciben decimales
+        identDataType.put("flotante", "numero_decimal");
+        identDataType.put("tiempo", "numero_decimal");
+        identDataType.put("temperatura", "numero_decimal");
+        identDataType.put("aceleracion", "numero_decimal");
+        
+        identDataType.put("booleano", "dato_bol");
+        
+        
+        
+        
+        for(Production id: identProd) {
+            if(!identDataType.get(id.lexemeRank(0)).equals(id.lexicalCompRank(-1))) {
+                errors.add(new ErrorLSSL(1, "Error semántico {}: Valor no compatible con el tipo de dato [#, %]",id,true));
+            }/*else if(identDataType.get(id.lexemeRank(0)).equals("dato_fecha") && !id.lexemeRank(-1).matches("'[0-9][0-9]/[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9]'")) {
+                errors.add(new ErrorLSSL(2, "Error semántico {}: La fecha no tiene el formato correcto [#, %]",id,false));
+            }*/else {
+                identificadores.put(id.lexemeRank(1), id.lexemeRank(-1));
+            }
+            
+            System.out.println(id.lexemeRank(0)+" : "+ id.lexicalCompRank(-1));
+            
+        }//for identProd
     }
 
     private void colorAnalysis() {

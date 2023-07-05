@@ -114,10 +114,10 @@ class Lexer {
     "\1\55\2\22\1\56\6\22\1\0\2\22\1\57\13\22"+
     "\1\60\5\22\1\61\3\22\1\0\5\22\1\62\1\63"+
     "\6\22\1\64\4\22\1\0\2\22\1\65\3\22\1\66"+
-    "\11\22\1\67\2\22\1\70\1\22\1\71\6\22";
+    "\10\22\1\67\2\22\1\70\7\22";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[314];
+    int [] result = new int[312];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -179,12 +179,11 @@ class Lexer {
     "\0\u023a\0\u023a\0\u336f\0\u33a8\0\u33e1\0\u341a\0\u3453\0\u348c"+
     "\0\u023a\0\u34c5\0\u34fe\0\u3537\0\u3570\0\u35a9\0\u35e2\0\u361b"+
     "\0\u023a\0\u3654\0\u368d\0\u36c6\0\u023a\0\u36ff\0\u3738\0\u3771"+
-    "\0\u37aa\0\u37e3\0\u381c\0\u3855\0\u388e\0\u38c7\0\u023a\0\u3900"+
-    "\0\u3939\0\u023a\0\u3972\0\u023a\0\u39ab\0\u39e4\0\u3a1d\0\u3a56"+
-    "\0\u3a8f\0\u3ac8";
+    "\0\u37aa\0\u37e3\0\u381c\0\u3855\0\u388e\0\u023a\0\u38c7\0\u3900"+
+    "\0\u023a\0\u3939\0\u3972\0\u39ab\0\u39e4\0\u3a1d\0\u3a56\0\u3a8f";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[314];
+    int [] result = new int[312];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -448,33 +447,32 @@ class Lexer {
     "\2\0\24\26\1\u0129\5\26\23\0\2\26\4\0\4\26"+
     "\2\0\1\26\1\u012a\30\26\23\0\2\26\4\0\4\26"+
     "\2\0\4\26\1\u0120\25\26\23\0\2\26\4\0\4\26"+
-    "\2\0\22\26\1\u012b\7\26\56\0\1\u012c\35\0\2\26"+
-    "\4\0\4\26\2\0\11\26\1\u012d\20\26\23\0\2\26"+
-    "\4\0\4\26\2\0\17\26\1\u012e\12\26\23\0\2\26"+
-    "\4\0\4\26\2\0\24\26\1\u012f\5\26\23\0\2\26"+
+    "\2\0\22\26\1\252\7\26\56\0\1\u012b\35\0\2\26"+
+    "\4\0\4\26\2\0\11\26\1\u012c\20\26\23\0\2\26"+
+    "\4\0\4\26\2\0\17\26\1\u012d\12\26\23\0\2\26"+
+    "\4\0\4\26\2\0\24\26\1\u012e\5\26\23\0\2\26"+
     "\4\0\4\26\2\0\17\26\1\u0122\12\26\23\0\2\26"+
-    "\4\0\4\26\2\0\1\26\1\u0130\30\26\23\0\2\26"+
+    "\4\0\4\26\2\0\1\26\1\u012f\30\26\23\0\2\26"+
     "\4\0\4\26\2\0\1\26\1\310\30\26\23\0\2\26"+
-    "\4\0\4\26\2\0\22\26\1\u0131\7\26\23\0\2\26"+
-    "\4\0\4\26\2\0\14\26\1\u0132\15\26\23\0\2\26"+
-    "\4\0\4\26\2\0\25\26\1\u0133\4\26\23\0\2\26"+
-    "\4\0\4\26\2\0\4\26\1\257\25\26\23\0\2\26"+
-    "\4\0\4\26\2\0\17\26\1\u0134\12\26\32\0\1\231"+
-    "\61\0\2\26\4\0\4\26\2\0\17\26\1\u0135\12\26"+
+    "\4\0\4\26\2\0\22\26\1\u0130\7\26\23\0\2\26"+
+    "\4\0\4\26\2\0\14\26\1\u0131\15\26\23\0\2\26"+
+    "\4\0\4\26\2\0\25\26\1\u0132\4\26\23\0\2\26"+
+    "\4\0\4\26\2\0\4\26\1\257\25\26\32\0\1\231"+
+    "\61\0\2\26\4\0\4\26\2\0\17\26\1\u0133\12\26"+
     "\23\0\2\26\4\0\4\26\2\0\22\26\1\310\7\26"+
     "\23\0\2\26\4\0\4\26\2\0\12\26\1\356\17\26"+
-    "\23\0\2\26\4\0\4\26\2\0\1\26\1\u0136\30\26"+
-    "\23\0\2\26\4\0\4\26\2\0\22\26\1\u0137\7\26"+
+    "\23\0\2\26\4\0\4\26\2\0\1\26\1\u0134\30\26"+
+    "\23\0\2\26\4\0\4\26\2\0\22\26\1\u0135\7\26"+
     "\23\0\2\26\4\0\4\26\2\0\16\26\1\u0107\13\26"+
-    "\23\0\2\26\4\0\4\26\2\0\16\26\1\u0138\13\26"+
+    "\23\0\2\26\4\0\4\26\2\0\16\26\1\u0136\13\26"+
     "\23\0\2\26\4\0\4\26\2\0\1\26\1\u0107\30\26"+
-    "\23\0\2\26\4\0\4\26\2\0\21\26\1\u0139\10\26"+
-    "\23\0\2\26\4\0\4\26\2\0\25\26\1\u013a\4\26"+
+    "\23\0\2\26\4\0\4\26\2\0\21\26\1\u0137\10\26"+
+    "\23\0\2\26\4\0\4\26\2\0\25\26\1\u0138\4\26"+
     "\23\0\2\26\4\0\4\26\2\0\5\26\1\310\24\26"+
     "\3\0";
 
   private static int [] zzUnpackTrans() {
-    int [] result = new int[15105];
+    int [] result = new int[15048];
     int offset = 0;
     offset = zzUnpackTrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -521,10 +519,10 @@ class Lexer {
     "\4\1\2\11\23\1\1\11\1\1\1\11\1\0\1\11"+
     "\1\0\1\1\1\0\1\1\3\11\50\1\1\11\2\0"+
     "\64\1\1\0\1\1\1\0\57\1\1\0\50\1\1\0"+
-    "\30\1\1\0\22\1\1\0\34\1";
+    "\30\1\1\0\22\1\1\0\32\1";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[314];
+    int [] result = new int[312];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -1003,287 +1001,282 @@ class Lexer {
             { return token(yytext(), "ERROR", yyline, yycolumn);
             }
             // fall through
-          case 58: break;
+          case 57: break;
           case 2:
             { /*Ignorar*/
             }
             // fall through
-          case 59: break;
+          case 58: break;
           case 3:
             { return token(yytext(), "operador_diferente", yyline, yycolumn);
             }
             // fall through
-          case 60: break;
+          case 59: break;
           case 4:
             { return token(yytext(), "operador_and", yyline, yycolumn);
             }
             // fall through
-          case 61: break;
+          case 60: break;
           case 5:
             { return token(yytext(), "parentesis_a", yyline, yycolumn);
             }
             // fall through
-          case 62: break;
+          case 61: break;
           case 6:
             { return token(yytext(), "parentesis_c", yyline, yycolumn);
             }
             // fall through
-          case 63: break;
+          case 62: break;
           case 7:
             { return token(yytext(), "operador_multiplicacion", yyline, yycolumn);
             }
             // fall through
-          case 64: break;
+          case 63: break;
           case 8:
             { return token(yytext(), "operador_suma", yyline, yycolumn);
             }
             // fall through
-          case 65: break;
+          case 64: break;
           case 9:
             { return token(yytext(), "coma", yyline, yycolumn);
             }
             // fall through
-          case 66: break;
+          case 65: break;
           case 10:
             { return token(yytext(), "operador_resta", yyline, yycolumn);
             }
             // fall through
-          case 67: break;
+          case 66: break;
           case 11:
             { return token(yytext(), "punto", yyline, yycolumn);
             }
             // fall through
-          case 68: break;
+          case 67: break;
           case 12:
             { return token(yytext(), "operador_division", yyline, yycolumn);
             }
             // fall through
-          case 69: break;
+          case 68: break;
           case 13:
             { return token(yytext(), "numero_entero", yyline, yycolumn);
             }
             // fall through
-          case 70: break;
+          case 69: break;
           case 14:
             { return token(yytext(), "doblePunto", yyline, yycolumn);
             }
             // fall through
-          case 71: break;
+          case 70: break;
           case 15:
             { return token(yytext(), "operador_menorque", yyline, yycolumn);
             }
             // fall through
-          case 72: break;
+          case 71: break;
           case 16:
             { return token(yytext(), "operador_asignacion", yyline, yycolumn);
             }
             // fall through
-          case 73: break;
+          case 72: break;
           case 17:
             { return token(yytext(), "operador_mayorque", yyline, yycolumn);
             }
             // fall through
-          case 74: break;
+          case 73: break;
           case 18:
             { return token(yytext(), "error", yyline, yycolumn);
             }
             // fall through
-          case 75: break;
+          case 74: break;
           case 19:
             { return token(yytext(), "corchete_a", yyline, yycolumn);
             }
             // fall through
-          case 76: break;
+          case 75: break;
           case 20:
             { return token(yytext(), "corchete_c", yyline, yycolumn);
             }
             // fall through
-          case 77: break;
+          case 76: break;
           case 21:
             { return token(yytext(), "reservada_inicio", yyline, yycolumn);
             }
             // fall through
-          case 78: break;
+          case 77: break;
           case 22:
             { return token(yytext(), "llaves_a", yyline, yycolumn);
             }
             // fall through
-          case 79: break;
+          case 78: break;
           case 23:
             { return token(yytext(), "llaves_c", yyline, yycolumn);
             }
             // fall through
-          case 80: break;
+          case 79: break;
           case 24:
             { return token(yytext(), "valor_cadena", yyline, yycolumn);
             }
             // fall through
-          case 81: break;
+          case 80: break;
           case 25:
             { return token(yytext(), "operador_menoroigual", yyline, yycolumn);
             }
             // fall through
-          case 82: break;
+          case 81: break;
           case 26:
             { return token(yytext(), "operador_equivalencia", yyline, yycolumn);
             }
             // fall through
-          case 83: break;
+          case 82: break;
           case 27:
             { return token(yytext(), "operador_mayoroigual", yyline, yycolumn);
             }
             // fall through
-          case 84: break;
+          case 83: break;
           case 28:
             { return token(yytext(), "identificador", yyline, yycolumn);
             }
             // fall through
-          case 85: break;
+          case 84: break;
           case 29:
             { return token(yytext(), "reservada_no", yyline, yycolumn);
             }
             // fall through
-          case 86: break;
+          case 85: break;
           case 30:
             { return token(yytext(), "reservada_si", yyline, yycolumn);
             }
             // fall through
-          case 87: break;
+          case 86: break;
           case 31:
             { return token(yytext(), "operador_or", yyline, yycolumn);
             }
             // fall through
-          case 88: break;
+          case 87: break;
           case 32:
             { return token(yytext(), "numero_decimal", yyline, yycolumn);
             }
             // fall through
-          case 89: break;
+          case 88: break;
           case 33:
             { return token(yytext(), "funcion_trig", yyline, yycolumn);
             }
             // fall through
-          case 90: break;
+          case 89: break;
           case 34:
             { return token(yytext(), "funcion_dos", yyline, yycolumn);
             }
             // fall through
-          case 91: break;
+          case 90: break;
           case 35:
             { return token(yytext(), "reservada_fin", yyline, yycolumn);
             }
             // fall through
-          case 92: break;
+          case 91: break;
           case 36:
             { return token(yytext(), "reservada_caso", yyline, yycolumn);
             }
             // fall through
-          case 93: break;
+          case 92: break;
           case 37:
             { return token(yytext(), "dato_entero", yyline, yycolumn);
             }
             // fall through
-          case 94: break;
+          case 93: break;
           case 38:
             { return token(yytext(), "reservada_leer", yyline, yycolumn);
             }
             // fall through
-          case 95: break;
+          case 94: break;
           case 39:
             { return token(yytext(), "entidad_unica", yyline, yycolumn);
             }
             // fall through
-          case 96: break;
+          case 95: break;
           case 40:
             { return token(yytext(), "funciones_entidad", yyline, yycolumn);
             }
             // fall through
-          case 97: break;
+          case 96: break;
           case 41:
             { return token(yytext(), "reservada_ciclo", yyline, yycolumn);
             }
             // fall through
-          case 98: break;
+          case 97: break;
           case 42:
-            { return token(yytext(), "bool_f", yyline, yycolumn);
+            { return token(yytext(), "dato_bol", yyline, yycolumn);
             }
             // fall through
-          case 99: break;
+          case 98: break;
           case 43:
             { return token(yytext(), "dato_fecha", yyline, yycolumn);
             }
             // fall through
-          case 100: break;
+          case 99: break;
           case 44:
             { return token(yytext(), "entidades", yyline, yycolumn);
             }
             // fall through
-          case 101: break;
+          case 100: break;
           case 45:
             { return token(yytext(), "rango_entidad", yyline, yycolumn);
             }
             // fall through
-          case 102: break;
+          case 101: break;
           case 46:
             { return token(yytext(), "reservada_si_no", yyline, yycolumn);
             }
             // fall through
-          case 103: break;
+          case 102: break;
           case 47:
             { return token(yytext(), "dato_cadena", yyline, yycolumn);
             }
             // fall through
-          case 104: break;
+          case 103: break;
           case 48:
             { return token(yytext(), "reservada_opcion", yyline, yycolumn);
             }
             // fall through
-          case 105: break;
+          case 104: break;
           case 49:
             { return token(yytext(), "dato_decimal", yyline, yycolumn);
             }
             // fall through
-          case 106: break;
+          case 105: break;
           case 50:
             { return token(yytext(), "reservada_funcion", yyline, yycolumn);
             }
             // fall through
-          case 107: break;
+          case 106: break;
           case 51:
             { return token(yytext(), "reservada_imprime", yyline, yycolumn);
             }
             // fall through
-          case 108: break;
+          case 107: break;
           case 52:
             { return token(yytext(), "reservada_retorna", yyline, yycolumn);
             }
             // fall through
-          case 109: break;
+          case 108: break;
           case 53:
             { return token(yytext(), "dato_booleano", yyline, yycolumn);
             }
             // fall through
-          case 110: break;
+          case 109: break;
           case 54:
             { return token(yytext(), "reservada_mientras", yyline, yycolumn);
             }
             // fall through
-          case 111: break;
+          case 110: break;
           case 55:
             { return token(yytext(), "conversion", yyline, yycolumn);
             }
             // fall through
-          case 112: break;
+          case 111: break;
           case 56:
             { return token(yytext(), "reservada_principal", yyline, yycolumn);
             }
             // fall through
-          case 113: break;
-          case 57:
-            { return token(yytext(), "bool_v", yyline, yycolumn);
-            }
-            // fall through
-          case 114: break;
+          case 112: break;
           default:
             zzScanError(ZZ_NO_MATCH);
         }
