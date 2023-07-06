@@ -37,7 +37,8 @@ public class Compilador extends javax.swing.JFrame {
     private ArrayList<ErrorLSSL> errors;
     private ArrayList<TextColor> textsColor;
     private Timer timerKeyReleased;
-    private ArrayList<Production> identProd,aritProd,entProd,asigprod;
+    private ArrayList<Production> identProd,aritProd,entProd;
+    private ArrayList<Production> asigprod;
     private HashMap<String, String> identificadores;
     private boolean codeHasBeenCompiled = false;
 
@@ -71,6 +72,8 @@ public class Compilador extends javax.swing.JFrame {
         errors = new ArrayList<>();
         textsColor = new ArrayList<>();
         identProd = new ArrayList<>();
+        asigprod = new ArrayList<>();
+        entProd = new ArrayList<>();
         identificadores = new HashMap<>();
         Functions.setAutocompleterJTextComponent(new String[]{}, jtpCode, () -> {
             timerKeyReleased.restart();
@@ -363,7 +366,7 @@ public class Compilador extends javax.swing.JFrame {
 //operaciones
 gramatica.group("VALORES", "identificador | VALOR");
 
- gramatica.group("OPERACIONES","VALORES operador_asignacion VALORES OPERADOR VALORES",true); 
+ gramatica.group("OPERACIONES","VALORES operador_asignacion VALORES OPERADOR VALORES",true, asigprod); 
  
   gramatica.group("OPERACIONEU","VALORES operador_asignacion VALORES",true, asigprod); 
  
@@ -423,8 +426,8 @@ gramatica.group("VALORES", "identificador | VALOR");
         gramatica.group("MET", "reservada_inicio | reservada_principal | reservada_funcion");
         
       /*  gramatica.loopForFunExecUntilChangeNotDetected(()->{
- gramatica.group("METODO","MET parentesis_a parentesis_a parentesis_c llaves_a CODIGO_DF llaves_c", true);
-        });
+            gramatica.group("METODO","MET parentesis_a parentesis_a parentesis_c llaves_a CODIGO_DF llaves_c", true);
+                   });
               gramatica.loopForFunExecUntilChangeNotDetected(()->{ 
                   gramatica.initialLineColumn();
                   gramatica.group("METODO", "MET parentesis_a parentesis_a parentesis_c llaves_a CODIGO_DF", true, 30, "error sintáctico {}: falta la llave de cierre [#,%]");
@@ -514,29 +517,43 @@ gramatica.group("VALORES", "identificador | VALOR");
                 errors.add(new ErrorLSSL(2, "Error semántico {}: La fecha no tiene el formato correcto [#, %]",id,false));
             
             }*/else {
-                identificadores.put(id.lexemeRank(1), id.lexemeRank(-1));
+                if (identificadores.containsKey(id.lexemeRank(1))) {
+                    errors.add(new ErrorLSSL(2, "Error semántico {}: Variable ya declarada [#, %]", id, false));
+                }else {
+                   identificadores.put(id.lexemeRank(1), id.lexicalCompRank(-1)); 
+                }
+                
             }
             
             System.out.println(id.lexemeRank(1)+" : "+ id.lexicalCompRank(-1));
             
         }//for identProd
+        //Analisis de asignación 
+        for(Production id: asigprod) {
+            if(!id.lexicalCompRank(0).equals("identificador")){
+                errors.add(new ErrorLSSL(3, "Error semántico {}: Asignación invalida, debe ser un identificador [#, %]", id, true));
+            }else {
+                if(!identificadores.containsKey(id.lexemeRank(0))) {
+                    errors.add(new ErrorLSSL(4, "Error semántico {}: La variable no ha sido inicializada [#, %]", id, false));
+                }else {
+                    System.out.println(id.getSizeTokens());
+                    if(id.getSizeTokens()==3) {
+                        //Es cuando la asignación no tiene operaciones
+                        if(!identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(2))){
+                            errors.add(new ErrorLSSL(5, "Error semántico {}: No son compatibles los tipos de datos [#, %]", id, false));
+                        }
+                    }else if(id.getSizeTokens()==5) {
+                        if(!(identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(2)) && identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(4)))){
+                            errors.add(new ErrorLSSL(5, "Error semántico {}: No son compatibles los tipos de datos [#, %]", id, false));
+                        }
+                        
+                    }
+                   
+                }
+            }
             
             
-            for (Production id : identProd) {
-    if (identificadores.containsKey(id.lexemeRank(1))) {
-        errors.add(new ErrorLSSL(2, "Error semántico {}: Variable ya declarada [#, %]", id, false));
-    } else {
-        identificadores.put(id.lexemeRank(1), id.lexemeRank(-1));
-    }}
-            
-         
-        
-        //Analisis de entidades 
-        for(Production id: entProd) {
-            //System.out.println(id.lexemeRank(0,-1));
-           // System.out.println(id.lexicalCompRank(0,-1));
-            System.out.println(id);
-        }
+        }//for asigProd
         }catch(Exception ex){
             
             System.out.println("NullPointerException");
@@ -662,6 +679,7 @@ return replace-3;
         tokens.clear();
         errors.clear();
         identProd.clear();
+        asigprod.clear();
         identificadores.clear();
         codeHasBeenCompiled = false;
     }
