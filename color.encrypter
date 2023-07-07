@@ -1,19 +1,6 @@
 principal() {
- torque _trq = 10
-entero _id = 10
-_trq = 1
-_id = _id + 10
-_trq = 1 + 2
-torque _trq42 = 10
- entero _trqe1 = 10
- potencia _trqs2 = 10
- rotacion _trqd3 = 10
- velocidad _trqf4 = 10
- presion _trqg5 = 10
- kilometraje _trqd6 = 10
-giro _gir=5
-cadena _cad = 'hola'
-booleano _bol = falso
-fecha _df = '2'
-aceite[1]
+ cadena _ed = ''
+torque _trq = 2
+booleano _caca = falso
+_trq =  _tr
 }
