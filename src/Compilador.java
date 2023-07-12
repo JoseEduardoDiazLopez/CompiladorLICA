@@ -106,7 +106,7 @@ public class Compilador extends javax.swing.JFrame {
         rootPanel.setBackground(new java.awt.Color(102, 102, 102));
 
         jtpCode.setBackground(new java.awt.Color(51, 51, 51));
-        jtpCode.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jtpCode.setFont(new java.awt.Font("Courier New", 3, 18)); // NOI18N
         jtpCode.setForeground(new java.awt.Color(255, 255, 255));
         jtpCode.setDisabledTextColor(new java.awt.Color(255, 255, 255));
         jScrollPane1.setViewportView(jtpCode);
@@ -377,6 +377,7 @@ gramatica.group("VALORES", "identificador | VALOR");
   
    gramatica.group("OPERACIONES","(VALORES VALORES OPERADOR VALORES )",true,8,"Error sintáctico {}: falta el operador de asignacion en:[#,%]");
  
+      gramatica.group("OPERACIONES","VALORES operador_asignacion",true,58,"Error sintáctico {}: falta el valor a asignar en:[#,%]");
  //RANGO-------------------_____
  
  gramatica.group("RANGO", "rango_entidad parentesis_a VALORES coma VALORES parentesis_c", true);
@@ -539,10 +540,7 @@ gramatica.group("VALORES", "identificador | VALOR");
                     if(id.getSizeTokens()==3) {
                         //Es cuando la asignación no tiene operaciones
                         //Existen dos posibles, que el componente lexico que se asigna sea un identificador
-                        if(identificadores.get(id.lexemeRank(2))==null) {
-                            //Si un operando del tipo identificador no existe 
-                            errors.add(new ErrorLSSL(7, "Error semántico {}: Una variable a asignar no ha sido declarada [#, %]", id, false));
-                        }else {
+                     
                             if(id.lexicalCompRank(2).equals("identificador")) {
                                 //Si es un identificador el token a asignar
                                if(!identificadores.get(id.lexemeRank(0)).equals(identificadores.get(id.lexemeRank(2)))){
@@ -552,7 +550,8 @@ gramatica.group("VALORES", "identificador | VALOR");
                                 //si no es identificador
                                if(!identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(2))){
                                 errors.add(new ErrorLSSL(6, "Error semántico {}: No es compatible la asignación se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));
-                               } 
+                               
+                         
                             }
                         }
                         
@@ -564,42 +563,39 @@ gramatica.group("VALORES", "identificador | VALOR");
                         System.out.println("CompLex: "+id.lexicalCompRank(4)+" - Tipo de dato "+identificadores.get(id.lexemeRank(4))+" - Identificador "+id.lexemeRank(4));
                         //Cuando la asignación tiene operaciones, las operaciones son binarias
                         System.out.println(identificadores.get(id.lexemeRank(2)));
-                        if(identificadores.get(id.lexemeRank(2))==null || identificadores.get(id.lexemeRank(4))==null) {
-                            errors.add(new ErrorLSSL(7, "Error semántico {}: Una variable a asignar no ha sido declarada [#, %]", id, false));
-                        }else {
+                        
                             if(!(id.lexicalCompRank(2).equals("identificador") && id.lexicalCompRank(4).equals("identificador"))) {
                             //Entra cuando ambos operandos no son identificadores
                             if(!(identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(2)) && identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(4)))){
-                                errors.add(new ErrorLSSL(5, "Error semántico {}: Variable invalida, se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));   
+                                errors.add(new ErrorLSSL(7, "Error semántico {}: Variable invalida, se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));   
                             }   
-                            }else if((id.lexicalCompRank(2).equals("identificador") && id.lexicalCompRank(4).equals("identificador")) &&
+                            }else if((id.lexicalCompRank(8).equals("identificador") && id.lexicalCompRank(4).equals("identificador")) &&
                                     !(identificadores.get(id.lexemeRank(0)).equals(identificadores.get(id.lexemeRank(2))) && 
                                     identificadores.get(id.lexemeRank(0)).equals(identificadores.get(id.lexemeRank(4))))) {
                                 //Entra cuando ambos operandos son identificadores;
-                                errors.add(new ErrorLSSL(5, "Error semántico {}: Variable invalida, se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));   
+                                errors.add(new ErrorLSSL(9, "Error semántico {}: Variable invalida, se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));   
                                 
                                 
                                 //De aquí para abajo no funciona bien, hace falta checar
                                 
                             }else if(id.lexicalCompRank(2).equals("identificador") && !id.lexicalCompRank(4).equals("identificador")){
                                 if(!identificadores.get(id.lexemeRank(0)).equals(identificadores.get(id.lexemeRank(2)))) {
-                                    errors.add(new ErrorLSSL(5, "Error semántico {}: Variable invalida, se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));   
+                                    errors.add(new ErrorLSSL(11, "Error semántico {}: Variable invalida, se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));   
                                 }else if(!identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(4))) {
-                                    errors.add(new ErrorLSSL(6, "Error semántico {}: No es compatible la asignación se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));
+                                    errors.add(new ErrorLSSL(12, "Error semántico {}: No es compatible la asignación se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));
                                 }
                             }else if(id.lexicalCompRank(4).equals("identificador") && !id.lexicalCompRank(2).equals("identificador")){
                                 if(!identificadores.get(id.lexemeRank(0)).equals(identificadores.get(id.lexemeRank(4)))) {
-                                    errors.add(new ErrorLSSL(5, "Error semántico {}: Variable invalida, se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));   
+                                    errors.add(new ErrorLSSL(13, "Error semántico {}: Variable invalida, se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));   
                                 }else if(!identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(2))) {
-                                    errors.add(new ErrorLSSL(6, "Error semántico {}: No es compatible la asignación se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));
+                                    errors.add(new ErrorLSSL(14, "Error semántico {}: No es compatible la asignación se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));
                                 }
                             }
                         }
                         
                         
-                        
-                        
-                    }
+                                            
+                    
                    
                 }
             }
@@ -645,45 +641,7 @@ gramatica.group("VALORES", "identificador | VALOR");
         Functions.colorTextPane(textsColor, jtpCode, new Color(255, 255, 255));
     }
     public String id(String n){
-        if(n.equals("IDENTIFICADOR")){return "1";}
-        if(n.equals("CADENA")){return "2";}
-        if(n.equals("TIPO_DE_DATO_ENTERO")){return "3";}
-        if(n.equals("NUMERO")){return "4";}
-        if(n.equals("COLOR")){return "5";}
-        if(n.equals("LLAVE_ABIERTA")){return "6";}
-        if(n.equals("LLAVE_CERRADA")){return "7";}
-        if(n.equals("OPERADOR_ASIGNACION")){return "8";}
-        if(n.equals("OPERADOR_MAS")){return "9";}
-        if(n.equals("OPERADOR_MENOS")){return "10";}
-        if(n.equals("OPERADOR_MULTIPLICAR")){return "11";}
-        if(n.equals("OPERADOR_DIVIDIR")){return "12";}
-        if(n.equals("OPERADOR_AND")){return "13";}
-        if(n.equals("OPERADOR_OR")){return "14";}
-        if(n.equals("OPERADOR_DIFERENTEQUE")){return "15";}
-        if(n.equals("OPERADOR_MAYORQUE")){return "16";}
-        if(n.equals("OPERADOR_MENORQUE")){return "17";}
-        if(n.equals("OPERADOR_INCREMENTO")){return "18";}
-        if(n.equals("OPERADOR_DECREMENTO")){return "19";}
-        if(n.equals("FIN_DE_SENTENCIA")){return "20";}
-        if(n.equals("COMA")){return "1";}
-        if(n.equals("ABRE_PARENTESIS")){return "21";}
-        if(n.equals("CIERRA_PARENTESIS")){return "22";}
-        if(n.equals("INICIO_CONDICIONAL")){return "23";}
-        if(n.equals("SEGUIR_CONDICIONAL")){return "24";}
-        if(n.equals("CICLO_WHILE")){return "25";}
-        if(n.equals("CICLO_FOR")){return "26";}
-        if(n.equals("CICLO_DOWHILE")){return "27";}
-        if(n.equals("PALABRA_RESERVADA")){return "28";}
-        if(n.equals("VERDADERO")){return "29";}
-        if(n.equals("FALSO")){return "30";}
-        if(n.equals("FUNCION")){return "31";}
-        if(n.equals("ERROR_1")){return "32";}
-        if(n.equals("ERROR_2")){return "33";}
-        if(n.equals("ERROR_3")){return "34";}
-        if(n.equals("TIPO_DE_DATO_CADENA")){return "35";}
-        if(n.equals("TIPO_DE_DATO_BOOLEANO")){return "36";}
-        if(n.equals("TIPO_DE_DATO_DECIMAL")){return "37";}
-        if(n.equals("NUMERO_DECIMAL")){return "38";}
+      
         return "";
     }
     private void fillTableTokens() {
