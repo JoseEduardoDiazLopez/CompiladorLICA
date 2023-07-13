@@ -542,7 +542,7 @@ gramatica.group("VALORES", "identificador | VALOR");
                         //Existen dos posibles, que el componente lexico que se asigna sea un identificador
                      
                             if(id.lexicalCompRank(2).equals("identificador")) {
-                                  if(!identificadores.containsKey(id.lexemeRank(4))){
+                                  if(!identificadores.containsKey(id.lexemeRank(2))){
  
                                     errors.add(new ErrorLSSL(80, "Error semántico {}: el valor asignado no es compatible ya que no esta declarado"+"[#, %]", id, false));   
         
@@ -569,26 +569,29 @@ gramatica.group("VALORES", "identificador | VALOR");
                         //Cuando la asignación tiene operaciones, las operaciones son binarias
                         System.out.println(identificadores.get(id.lexemeRank(2)));
                         
+     if(!id.lexicalCompRank(0).equals("identificador")){
+                errors.add(new ErrorLSSL(30, "Error semántico {}: Asignación invalida, debe ser un identificador [#, %]", id, true));
+            }                     
+ if(!identificadores.containsKey(id.lexemeRank(2))){
+ 
+ errors.add(new ErrorLSSL(9, "Error semántico {}: el valor asignado no es compatible ya que no esta declarado"+"[#, %]", id, false));   
+                            
+ }else{
+  
+        
+if(!identificadores.containsKey(id.lexemeRank(4))){
+ 
+ errors.add(new ErrorLSSL(8, "Error semántico {}: el valor asignado no es compatible ya que no esta declarado"+"[#, %]", id, false));   
+        
+         }}
                             if(!(id.lexicalCompRank(2).equals("identificador") && id.lexicalCompRank(4).equals("identificador"))) {
                             //Entra cuando ambos operandos no son identificadores
   if(!(identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(4)))){
   errors.add(new ErrorLSSL(7, "Error semántico {}: asignacion invalida, se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));   
-                            }   
+                            } 
+   }
                             }
-        if(!identificadores.containsKey(id.lexemeRank(2))){
- 
-                                    errors.add(new ErrorLSSL(9, "Error semántico {}: el valor asignado no es compatible ya que no esta declarado"+"[#, %]", id, false));   
-                                
-                                
-                                //De aquí para abajo no funciona bien, hace falta checar------------------
-                                
-                            }
-        
-         if(!identificadores.containsKey(id.lexemeRank(4))){
- 
-                                    errors.add(new ErrorLSSL(8, "Error semántico {}: el valor asignado no es compatible ya que no esta declarado"+"[#, %]", id, false));   
-        
-         }
+       
         else if(id.lexicalCompRank(2).equals("identificador") && !id.lexicalCompRank(4).equals("identificador")){
                                 if(!identificadores.get(id.lexemeRank(0)).equals(identificadores.get(id.lexemeRank(2)))) {
                                     errors.add(new ErrorLSSL(11, "Error semántico {}: Variable invalida, se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));   
@@ -609,10 +612,10 @@ gramatica.group("VALORES", "identificador | VALOR");
                     
                    
                 }
-            }
+            }//for asigProd
             
-        }//for asigProd
-        }catch(Exception ex){
+        }//try
+        catch(Exception ex){
             
             System.out.println("NullPointerException");
         }
