@@ -542,10 +542,15 @@ gramatica.group("VALORES", "identificador | VALOR");
                         //Existen dos posibles, que el componente lexico que se asigna sea un identificador
                      
                             if(id.lexicalCompRank(2).equals("identificador")) {
+                                  if(!identificadores.containsKey(id.lexemeRank(4))){
+ 
+                                    errors.add(new ErrorLSSL(80, "Error semántico {}: el valor asignado no es compatible ya que no esta declarado"+"[#, %]", id, false));   
+        
+         } else{
                                 //Si es un identificador el token a asignar
                                if(!identificadores.get(id.lexemeRank(0)).equals(identificadores.get(id.lexemeRank(2)))){
                                 errors.add(new ErrorLSSL(5, "Error semántico {}: No es compatible el tipo de dato del identificador a asignar se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));
-                               }
+                               }}
                             }else {
                                 //si no es identificador
                                if(!identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(2))){
@@ -566,19 +571,25 @@ gramatica.group("VALORES", "identificador | VALOR");
                         
                             if(!(id.lexicalCompRank(2).equals("identificador") && id.lexicalCompRank(4).equals("identificador"))) {
                             //Entra cuando ambos operandos no son identificadores
-                            if(!(identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(2)) && identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(4)))){
-                                errors.add(new ErrorLSSL(7, "Error semántico {}: Variable invalida, se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));   
+  if(!(identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(4)))){
+  errors.add(new ErrorLSSL(7, "Error semántico {}: asignacion invalida, se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));   
                             }   
-                            }else if((id.lexicalCompRank(8).equals("identificador") && id.lexicalCompRank(4).equals("identificador")) &&
-                                    !(identificadores.get(id.lexemeRank(0)).equals(identificadores.get(id.lexemeRank(2))) && 
-                                    identificadores.get(id.lexemeRank(0)).equals(identificadores.get(id.lexemeRank(4))))) {
-                                //Entra cuando ambos operandos son identificadores;
-                                errors.add(new ErrorLSSL(9, "Error semántico {}: Variable invalida, se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));   
+                            }
+        if(!identificadores.containsKey(id.lexemeRank(2))){
+ 
+                                    errors.add(new ErrorLSSL(9, "Error semántico {}: el valor asignado no es compatible ya que no esta declarado"+"[#, %]", id, false));   
                                 
                                 
-                                //De aquí para abajo no funciona bien, hace falta checar
+                                //De aquí para abajo no funciona bien, hace falta checar------------------
                                 
-                            }else if(id.lexicalCompRank(2).equals("identificador") && !id.lexicalCompRank(4).equals("identificador")){
+                            }
+        
+         if(!identificadores.containsKey(id.lexemeRank(4))){
+ 
+                                    errors.add(new ErrorLSSL(8, "Error semántico {}: el valor asignado no es compatible ya que no esta declarado"+"[#, %]", id, false));   
+        
+         }
+        else if(id.lexicalCompRank(2).equals("identificador") && !id.lexicalCompRank(4).equals("identificador")){
                                 if(!identificadores.get(id.lexemeRank(0)).equals(identificadores.get(id.lexemeRank(2)))) {
                                     errors.add(new ErrorLSSL(11, "Error semántico {}: Variable invalida, se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));   
                                 }else if(!identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(4))) {
@@ -599,7 +610,6 @@ gramatica.group("VALORES", "identificador | VALOR");
                    
                 }
             }
-            
             
         }//for asigProd
         }catch(Exception ex){
