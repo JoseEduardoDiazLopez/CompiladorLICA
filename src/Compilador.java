@@ -36,7 +36,7 @@ public class Compilador extends javax.swing.JFrame {
     private ArrayList<ErrorLSSL> errors;
     private ArrayList<TextColor> textsColor;
     private Timer timerKeyReleased;
-    private ArrayList<Production> identProd, aritProd, entProd;
+    private ArrayList<Production> identProd, rang,enti, entProd;
     private ArrayList<Production> asigprod, asigprod2;
     private HashMap<String, String> identificadores;
     private boolean codeHasBeenCompiled = false;
@@ -73,6 +73,8 @@ public class Compilador extends javax.swing.JFrame {
         asigprod = new ArrayList<>();
         asigprod2 = new ArrayList<>();
         entProd = new ArrayList<>();
+        rang = new ArrayList<>();
+        enti = new ArrayList<>();
         identificadores = new HashMap<>();
         Functions.setAutocompleterJTextComponent(new String[]{}, jtpCode, () -> {
             timerKeyReleased.restart();
@@ -339,7 +341,7 @@ public class Compilador extends javax.swing.JFrame {
         gramatica.delete("TIPO", 6, "Error sintáctico {}: se espera la estructura (tipo de dato)(identificador)(=)(valor) (Linea: # )");
 
         //ENTIDADES-----------
-        gramatica.group("ENTIDADES_COMPZ", "ENTIDADES corchete_a VALOR corchete_c", true, entProd);
+        gramatica.group("ENTIDADES_COMPZ", "ENTIDADES corchete_a VALOR corchete_c", true, enti);
 
         gramatica.group("ENTIDADES_COMP", "ENTIDADES VALOR corchete_c", true, 9, "error sintáctico {}: falta el corchete de apertura [#,%]");
         gramatica.finalLineColumn();
@@ -375,7 +377,7 @@ public class Compilador extends javax.swing.JFrame {
         gramatica.group("OPERACIONES", "VALORES operador_asignacion", true, 58, "Error sintáctico {}: falta el valor a asignar en:[#,%]");
         //RANGO-------------------_____
 
-        gramatica.group("RANGO", "rango_entidad parentesis_a VALORES coma VALORES parentesis_c", true);
+        gramatica.group("RANGO", "rango_entidad parentesis_a VALORES coma VALORES parentesis_c", true,rang);
 
         gramatica.group("RANGO",
                 "(rango_entidad VALORES coma VALORES parentesis_c) |"
@@ -492,9 +494,7 @@ public class Compilador extends javax.swing.JFrame {
         identDataType.put("aceleracion", "numero_decimal");
 
         identDataType.put("booleano", "dato_bol");
-        //operadores
-     
-
+        
         try {
             for (Production id : identProd) {
                 if (!identDataType.get(id.lexemeRank(0)).equals(id.lexicalCompRank(-1))) {
@@ -561,6 +561,14 @@ public class Compilador extends javax.swing.JFrame {
                 if (!id.lexicalCompRank(0).equals("identificador")) {
                     errors.add(new ErrorLSSL(8, "Error semántico {}: Asignación invalida, debe ser un identificador [#, %]", id, true));
                 }
+                if (!id.lexicalCompRank(2).equals("identificador") && !id.lexicalCompRank(4).equals("identificador")) {
+                            //Entra cuando ambos operandos no son identificadores
+                    if (!identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(4)) || !identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(2))) {
+                        errors.add(new ErrorLSSL(15, "Error semántico {}: asignacion invalida, se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
+                    }
+                            
+                            
+                }
 
                 if (id.lexicalCompRank(2).equals("identificador") || id.lexicalCompRank(4).equals("identificador")) {
 
@@ -589,31 +597,83 @@ public class Compilador extends javax.swing.JFrame {
                            if(!identificadores.get(id.lexemeRank(2)).equals(identificadores.get(id.lexemeRank(0)))||!identificadores.get(id.lexemeRank(4)).equals(identificadores.get(id.lexemeRank(0)))){
                                errors.add(new ErrorLSSL(14, "Error semántico {}: No es compatible la asignación se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
                            }
-                        }
-
-                        
-
-                        if (!id.lexicalCompRank(2).equals("identificador") && !id.lexicalCompRank(4).equals("identificador")) {
-                            //Entra cuando ambos operandos no son identificadores
-                            if (!identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(4)) || !identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(2))) {
-                                errors.add(new ErrorLSSL(15, "Error semántico {}: asignacion invalida, se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
-                            }
-                            
-                            
-                        }
-                       
-                     
+                        }                     
                     }//else
 
                 }//if padre
+                //-------------------------------------------------------
+                
+                //operadores
+        /*
+        //Lógicos
+            operador_and
+            operador_diferente
+            operador_or
+        //Númericos
+            operador_suma
+            operador_resta
+            operador_multiplicacion
+            operador_division
+            operador_asignacion
+            operador_mayoroigual
+            operador_menoroigual
+            operador_menorque"
+            operador_mayorque
+            operador_equivalencia
+        */
+                    //Aquí se va a evaluar el operador
+        HashMap<String,String> opeTypes = new HashMap<>();
+        //Operadores Lógicos
+        opeTypes.put("operador_and",        "operador_Logico");
+        opeTypes.put("operador_diferente",  "operador_Logico");
+        opeTypes.put("operador_or",         "operador_Logico");
+        //Operadores numericos
+        opeTypes.put("operador_suma",           "operador_Numerico");
+        opeTypes.put("operador_resta",          "operador_Numerico");
+        opeTypes.put("operador_multiplicacion", "operador_Numerico");
+        opeTypes.put("operador_division",       "operador_Numerico");
+        //Operadores de comparación
+        opeTypes.put("operador_mayoroigual",    "operador_Comparacion");
+        opeTypes.put("operador_menoroigual",    "operador_Comparacion");
+        opeTypes.put("operador_menorque",       "operador_Comparacion");
+        opeTypes.put("operador_mayorque",       "operador_Comparacion");
+        opeTypes.put("operador_equivalencia",   "operador_Comparacion");
+                    
+                    if (identificadores.get(id.lexemeRank(0)).equals("dato_bol")&& !opeTypes.get(id.lexicalCompRank(3)).equals("operador_Logico")) {
+                        errors.add(new ErrorLSSL(16, "Error semántico {}: Operación invalida, debe ser un operador lógico [#, %]", id, false));  
+                    }else if ((identificadores.get(id.lexemeRank(0)).equals("numero_entero") || identificadores.get(id.lexemeRank(0)).equals("numero_decimal"))
+                            && !opeTypes.get(id.lexicalCompRank(3)).equals("operador_Numerico")) {
+                        errors.add(new ErrorLSSL(17, "Error semántico {}: Operación invalida, debe ser un operador Aritmetico [#, %]", id, false));  
+                    }
+                    if ((identificadores.get(id.lexemeRank(0)).equals("numero_decimal")) || identificadores.get(id.lexemeRank(0)).equals("numero_entero") 
+                            && id.lexemeRank(4).substring(0, 1).equals("0") && id.lexicalCompRank(3).equals("operador_division")) {
+                        errors.add(new ErrorLSSL(17, "Error semántico {}: Operación invalida, No es valido dividir entre cero [#, %]", id, false));  
+                    }
+                        
+                    
+                    //System.out.println("Tipo del identificador: "+identificadores.get(id.lexemeRank(0))+", Operador: "+Integer.parseInt(id.lexemeRank(4)));
+                
             }//for asigProd2
-        }
-                catch(Exception ex){
+        
+            for(Production id: enti) {
+                System.out.println(id.lexicalCompRank(2));
+               if (!id.lexicalCompRank(2).equals("numero_entero"))
+                   errors.add(new ErrorLSSL(18, "Error semántico {}: Una entidad recibe como parametro un número entero [#, %]", id, false));  
+            }
             
-            System.out.println("NullPointerException");
+            for (Production id: rang) {
+                System.out.println("-+++++++"+id.lexicalCompRank(2));
+                System.out.println(id.lexicalCompRank(4));
+                
+                if (!id.lexicalCompRank(2).equals("numero_entero") || !id.lexicalCompRank(4).equals("numero_entero"))
+                   errors.add(new ErrorLSSL(19, "Error semántico {}: Un rango recibe como parametros números enteros [#, %]", id, false));  
+            }
+        }catch(Exception ex){
+            
+            System.out.println("NullPointerException: "+ex.getCause());
         }
 
-            }
+    }//Semantico
 
     
 
@@ -698,6 +758,8 @@ public class Compilador extends javax.swing.JFrame {
         tokens.clear();
         errors.clear();
         identProd.clear();
+        rang.clear();
+        enti.clear();
         asigprod.clear();
         asigprod2.clear();
         identificadores.clear();
