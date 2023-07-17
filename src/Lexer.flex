@@ -81,7 +81,7 @@ si_no { return token(yytext(), "reservada_si_no", yyline, yycolumn); }
 
 //componentes léxicos de un ciclo
 ciclo { return token(yytext(), "reservada_ciclo", yyline, yycolumn); }
-mientras { return token(yytext(), "reservada_mientras", yyline, yycolumn); }
+mientras { return token(yytext(), "while", yyline, yycolumn); }
 
 
 //son las funciones que se pueden definir a una entidades o entidad_unica
@@ -127,7 +127,7 @@ motor | ventilador | motor_arranque | acelerador | coolant | montadora |volt | m
 "," { return token(yytext(), "coma", yyline, yycolumn); }
 
 ":" { return token(yytext(), "doblePunto", yyline, yycolumn); }
-
+"$" {return token(yytext(), "signociclo", yyline, yycolumn);}
 
 
 . { return token(yytext(), "ERROR", yyline, yycolumn); }

@@ -319,7 +319,7 @@ public class Compilador extends javax.swing.JFrame {
 
  /* agrupar valores */
         gramatica.group("VALOR", "numero_decimal | valor_cadena | dato_bol | numero_entero", true);
-        gramatica.group("OPERADOR", "operador_suma| operador_resta| operador_multiplicacion | operador_division | operador_and | operador_or | operador_diferente");
+        gramatica.group("OPERADOR", "operador_suma| operador_resta| operador_multiplicacion | operador_division | operador_and | operador_or | operador_diferente | operador_menorque | operador_mayorque | operador_equivalencia | operador_menoroigual | operador_mayoroigual");
         gramatica.group("TIPO", "dato_cadena | dato_entero | dato_entero | dato_fecha | dato_booleano", true);
         gramatica.group("ENTIDADES", "entidades");
 
@@ -413,57 +413,39 @@ public class Compilador extends javax.swing.JFrame {
         gramatica.group("FUNCIONES", "FUNCION parentesis_a (VALORES | (VALORES coma VALORES)+)", true, 27, "error sintáctico {}: falta el parentesis de cierre [#,%]");
 
         //-------------------
-        gramatica.group("CODIGO_DF", "(DECLARAR_VARIABLE | OPERACIONES | OPERACIONEU | RANGO | FUNCION | ENTIDADES_COMPZ)", true);
+        //Definir if
+        gramatica.group("E_SI", "(reservada_si | reservada_no | reservada_si_no | reservada_mientras)");
+
+        gramatica.group("SI_S", "E_SI  parentesis_a VALORES OPERADOR VALORES parentesis_c doblePunto (DECLARAR_VARIABLE |  OPERACIONES | OPERACIONEU | RANGO | FUNCION | ENTIDADES_COMPZ | FUNCIONES)*? doblePunto");
+        gramatica.group("SI", " parentesis_a VALORES OPERADOR VALORES parentesis_c doblePunto (DECLARAR_VARIABLE |  OPERACIONES | OPERACIONEU | RANGO | FUNCION | ENTIDADES_COMPZ | FUNCIONES)*? doblePunto", true, 34, "error sintáctico {}: falta la palabra reservada de condicion [#,%]");
+        gramatica.group("SI", "E_SI VALORES OPERADOR VALORES parentesis_c doblePunto (DECLARAR_VARIABLE | OPERACIONES | OPERACIONEU | RANGO | FUNCION | ENTIDADES_COMPZ | FUNCIONES)*? doblePunto", true, 36, "error sintáctico {}: falta parentesis de apertura en condicion [#,%]");
+        gramatica.group("SI", "E_SI parentesis_a VALORES OPERADOR VALORES doblePunto (DECLARAR_VARIABLE |  OPERACIONES | OPERACIONEU | RANGO | FUNCION | ENTIDADES_COMPZ | FUNCIONES)*? doblePunto", true, 37, "error sintáctico {}: falta parentesis de cierre en condicion [#,%]");
+        gramatica.group("SI", "E_SI parentesis_a VALORES OPERADOR VALORES parentesis_c (DECLARAR_VARIABLE |  OPERACIONES | OPERACIONEU | RANGO | FUNCION | ENTIDADES_COMPZ | FUNCIONES)*? doblePunto", true, 38, "error sintáctico {}: falta doble punto de apertura en condicion [#,%]");
+        gramatica.group("SI", "E_SI parentesis_a VALORES OPERADOR VALORES parentesis_c  doblePunto (DECLARAR_VARIABLE |  OPERACIONES | OPERACIONEU | RANGO | FUNCION | ENTIDADES_COMPZ | FUNCIONES)*?", true, 39, "error sintáctico {}: falta doble punto de cierre en condicion [#,%]");
+        gramatica.group("SI", "E_SI parentesis_a OPERADOR VALORES parentesis_c  doblePunto (DECLARAR_VARIABLE |  OPERACIONES | OPERACIONEU | RANGO | FUNCION | ENTIDADES_COMPZ | FUNCIONES)*? doblePunto", true, 40, "error sintáctico {}: falta valor en la condicion [#,%]");
+        gramatica.group("SI", "E_SI parentesis_a VALORES OPERADOR parentesis_c  doblePunto (DECLARAR_VARIABLE | OPERACIONES | OPERACIONEU | RANGO | FUNCION | ENTIDADES_COMPZ | FUNCIONES)*? doblePunto", true, 41, "error sintáctico {}: falta valor en la condicion [#,%]");
+        gramatica.group("SI", "E_SI parentesis_a VALORES VALORES parentesis_c  doblePunto (DECLARAR_VARIABLE |  OPERACIONES | OPERACIONEU | RANGO | FUNCION | ENTIDADES_COMPZ | FUNCIONES)*? doblePunto", true, 42, "error sintáctico {}: falta operador en la condicion [#,%]");
+        
+                //definir ciclo
+
+        gramatica.group("CICLO_H", "while parentesis_a VALORES OPERADOR VALORES parentesis_c signociclo (DECLARAR_VARIABLE |  OPERACIONES | OPERACIONEU | RANGO | FUNCION | ENTIDADES_COMPZ | FUNCIONES | SI | SI_S)*? signociclo");
+        gramatica.group("CICLO_H2", "while parentesis_a VALORES OPERADOR VALORES parentesis_c signociclo", true, 43, "error sintáctico {}: falta cerrar el ciclo [#,%]");
+        
+        gramatica.group("CODIGO_DF", "(DECLARAR_VARIABLE | OPERACIONES | OPERACIONEU | RANGO | FUNCION | ENTIDADES_COMPZ | FUNCIONES | SI  | SI_S | CICLO_H)", true);
 
         gramatica.group("MET", "reservada_inicio | reservada_principal | reservada_funcion");
 
-        /*  gramatica.loopForFunExecUntilChangeNotDetected(()->{
-            gramatica.group("METODO","MET parentesis_a parentesis_a parentesis_c llaves_a CODIGO_DF llaves_c", true);
-                   });
-              gramatica.loopForFunExecUntilChangeNotDetected(()->{ 
-                  gramatica.initialLineColumn();
-                  gramatica.group("METODO", "MET parentesis_a parentesis_a parentesis_c llaves_a CODIGO_DF", true, 30, "error sintáctico {}: falta la llave de cierre [#,%]");
-                  gramatica.finalLineColumn();
-                   gramatica.group("METODO", "MET parentesis_a parentesis_a parentesis_c CODIGO_DF llaves_c", true, 31, "error sintáctico {}: falta la llave de apertura [#,%]");
-              
-                   gramatica.group("CODIGO_DF","CODIGO_DF");
-              
-              });*/
         gramatica.group("METODO", "MET parentesis_a parentesis_c llaves_a (CODIGO_DF)*? llaves_c", true);
         gramatica.group("METODO", "MET parentesis_a parentesis_c (CODIGO_DF)*?llaves_c", true, 31, "error sintáctico {}: falta la llave de apertura [#,%]");
-        gramatica.group("METODO", "MET parentesis_a parentesis_c llaves_a (CODIGO_DF)*?", true, 30, "error sintáctico {}: falta la llave de cierre [#,%]");
+        gramatica.group("METODO", "MET parentesis_a parentesis_c llaves_a (CODIGO_DF)*?", true, 32, "error sintáctico {}: falta la llave de cierre [#,%]");
 
-        gramatica.group("METODO", "MET parentesis_c llaves_a (CODIGO_DF)*? llaves_c", true, 29, "error sintáctico {}: falta parentesis de apertura [#,%]");
-        gramatica.group("METODO", "MET parentesis_a llaves_a (CODIGO_DF)*? llaves_c", true, 30, "error sintáctico {}: falta parentesis de cierre [#,%]");
-        gramatica.group("METODO", "MET (VALORES | PARAMETROS) llaves_a (CODIGO_DF)*? llaves_c", true, 31, "error sintáctico {}: faltan parentesis [#,%]");
+        gramatica.group("METODO", "MET parentesis_c llaves_a (CODIGO_DF)*? llaves_c", true, 33, "error sintáctico {}: falta parentesis de apertura [#,%]");
+        gramatica.group("METODO", "MET parentesis_a llaves_a (CODIGO_DF)*? llaves_c", true, 34, "error sintáctico {}: falta parentesis de cierre [#,%]");
+        gramatica.group("METODO", "MET (VALORES | PARAMETROS) llaves_a (CODIGO_DF)*? llaves_c", true, 35, "error sintáctico {}: faltan parentesis [#,%]");
 
-        //definir estructura condición-----------------------
-        gramatica.group("CONDICION_D1", "reservada_si parentesis_a VALORES OPERADOR VALORES parentesis_c doblePunto (CODIGO_DF)* doblePunto");
-        gramatica.group("CONDICION_D", "(VALORES | identificador) ((operador_logico | operador_relacional) )+ ", true, 32, "error sintáctico {}: faltan un operador [#,%]");
-        gramatica.group("CONDICION_D", " ((operador_logico | operador_relacional) (VALOR | identificador))+ ", true, 33, "error sintáctico {}: faltan un operador [#,%]");
-        //gramatica.group("CONDICION", "parentesis_a CONDICION_D parentesis_c");
+        
+      
 
-        //Definir si
-        gramatica.group("E_SI", "(reservada_si | reservada_no | reservada_si_no | reservada_mientras)");
-        gramatica.group("SI", "E_SI parentesis_a CONDICION_D parentesis_c llaves_a (CODIGO_DF)*? llaves_c");
-        gramatica.group("SI", "E_SI parentesis_a CONDICION_D parentesis_c (CODIGO_DF)*? llaves_c", true, 34, "error sintáctico {}: faltan las llaves de apertura [#,%]");
-        gramatica.group("SI", "E_SI parentesis_a CONDICION_D parentesis_c llaves_a (CODIGO_DF)*", true, 35, "error sintáctico {}: faltan las llaves de cierre [#,%]");
-        //gramatica.group("SI","E_SI parentesis_a CONDICION_D parentesis_c (CODIGO_DF)*",true,15,"error sintáctico {}: faltan las llaves [#,%]");
-        gramatica.group("SI", "E_SI CONDICION_D llaves_a (CODIGO_DF)*? llaves_c", true, 36, "error sintáctico {}: faltan parentesis [#,%]");
-        gramatica.group("SI", "E_SI CONDICION_D parentesis_c llaves_a (CODIGO_DF)*? llaves_c", true, 37, "error sintáctico {}: faltan el parentesis de apertura [#,%]");
-        gramatica.group("SI", "E_SI parentesis_a CONDICION_D llaves_a (CODIGO_DF)*? llaves_c", true, 38, "error sintáctico {}: faltan el parentesis de cierre [#,%]");
-
-        //
-        gramatica.group("INCDEC", "identificador operador_aritmetico operador_aritmetico ");
-        //definir ciclo
-        gramatica.group("CONDICION_CICLO", "identificador doblePunto VALOR puntoYcoma CONDICION_D puntoYcoma INCDEC");
-        gramatica.group("CICLO_H", "reservada_ciclo parentesis_a CONDICION_CICLO parentesis_c llaves_a (CODIGO_DF)*? llaves_c");
-        gramatica.group("CICLO_H", "reservada_ciclo CONDICION_CICLO parentesis_c llaves_a (CODIGO_DF)*? llaves_c", true, 39, "error sintáctico {}: faltan el parentesis de apertura [#,%]");
-        gramatica.group("CICLO_H", "reservada_ciclo parentesis_a CONDICION_CICLO llaves_a (CODIGO_DF)*? llaves_c", true, 40, "error sintáctico {}: faltan el parentesis de cierre [#,%]");
-        gramatica.group("CICLO_H", "reservada_ciclo parentesis_a CONDICION_CICLO parentesis_c (CODIGO_DF)*? llaves_c", true, 41, "error sintáctico {}: falta la llave de apertura [#,%]");
-        gramatica.group("CICLO_H", "reservada_ciclo parentesis_a CONDICION_CICLO parentesis_c llaves_a (CODIGO_DF)*? ", true, 42, "error sintáctico {}: falta la llave de cierre [#,%]");
-        gramatica.group("CICLO_H", "reservada_ciclo CONDICION_CICLO llaves_a (CODIGO_DF)*? ", true, 43, "error sintáctico {}: faltan parentesis [#,%]");
-        gramatica.group("CICLO_H", "reservada_ciclo parentesis_a CONDICION_CICLO parentesis_c (CODIGO_DF)*?", true, 44, "error sintáctico {}: falta las llaves [#,%]");
 
         /* Mostrar gramáticas */
         gramatica.show();
@@ -494,7 +476,7 @@ public class Compilador extends javax.swing.JFrame {
         identDataType.put("aceleracion", "numero_decimal");
 
         identDataType.put("booleano", "dato_bol");
-        
+
         try {
             for (Production id : identProd) {
                 if (!identDataType.get(id.lexemeRank(0)).equals(id.lexicalCompRank(-1))) {
@@ -572,26 +554,26 @@ public class Compilador extends javax.swing.JFrame {
 
                 if (id.lexicalCompRank(2).equals("identificador") || id.lexicalCompRank(4).equals("identificador")) {
 
-                    if ((!identificadores.containsKey(id.lexemeRank(2))&& id.lexicalCompRank(2).equals("identificador")) || (!identificadores.containsKey(id.lexemeRank(4))&& id.lexicalCompRank(4).equals("identificador"))) {
-                          // aqui lanza error cuando algun identificador de los operandos no exista
+                    if ((!identificadores.containsKey(id.lexemeRank(2)) && id.lexicalCompRank(2).equals("identificador")) || (!identificadores.containsKey(id.lexemeRank(4)) && id.lexicalCompRank(4).equals("identificador"))) {
+                        // aqui lanza error cuando algun identificador de los operandos no exista
                         errors.add(new ErrorLSSL(9, "Error semántico {}: asignación invalida la variable no está declarada" + "[#, %]", id, false));
 
-                    }
-                    else { // entra a este else cuando ya evaluo que existen lso operandos para comparar op/num num/op y 
+                    } else { // entra a este else cuando ya evaluo que existen lso operandos para comparar op/num num/op y 
                         if (id.lexicalCompRank(2).equals("identificador") && !id.lexicalCompRank(4).equals("identificador")) {
                             if (!identificadores.get(id.lexemeRank(0)).equals(identificadores.get(id.lexemeRank(2)))) {
                                 errors.add(new ErrorLSSL(10, "Error semántico {}: Variable invalida, se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
                             } else if (!identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(4))) {
                                 errors.add(new ErrorLSSL(11, "Error semántico {}: No es compatible la asignación se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
                             }
-                        
-                        }else if (id.lexicalCompRank(4).equals("identificador") && !id.lexicalCompRank(2).equals("identificador")) {
-                                
+
+                        } else if (id.lexicalCompRank(4).equals("identificador") && !id.lexicalCompRank(2).equals("identificador")) {
+
                             if (!identificadores.get(id.lexemeRank(0)).equals(identificadores.get(id.lexemeRank(4)))) {
                                 errors.add(new ErrorLSSL(12, "Error semántico {}: Variable invalida, se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
                             } else if (!identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(2))) {
                                 errors.add(new ErrorLSSL(13, "Error semántico {}: No es compatible la asignación se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
                             }
+
                         }else if (id.lexicalCompRank(2).equals("identificador") && id.lexicalCompRank(4).equals("identificador")) {
                             
                            if(!identificadores.get(id.lexemeRank(2)).equals(identificadores.get(id.lexemeRank(0)))||!identificadores.get(id.lexemeRank(4)).equals(identificadores.get(id.lexemeRank(0)))){
@@ -675,7 +657,33 @@ public class Compilador extends javax.swing.JFrame {
 
     }//Semantico
 
-    
+
+                        } else if (id.lexicalCompRank(2).equals("identificador") && id.lexicalCompRank(4).equals("identificador")) {
+
+                            if (!identificadores.get(id.lexemeRank(2)).equals(identificadores.get(id.lexemeRank(0))) || !identificadores.get(id.lexemeRank(4)).equals(identificadores.get(id.lexemeRank(0)))) {
+                                errors.add(new ErrorLSSL(14, "Error semántico {}: No es compatible la asignación se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
+                            }
+                        }
+
+                        
+
+                    }//else
+
+                }//if padre
+                if (!id.lexicalCompRank(2).equals("identificador") && !id.lexicalCompRank(4).equals("identificador")) {
+                            //Entra cuando ambos operandos no son identificadores
+                            if (!identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(4)) || !identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(2))) {
+                                errors.add(new ErrorLSSL(15, "Error semántico {}: asignacion invalida, se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
+                            }
+
+                        }
+            }//for asigProd2
+        } catch (Exception ex) {
+
+            System.out.println("NullPointerException");
+        }
+
+    }
 
     private void colorAnalysis() {
         /* Limpiar el arreglo de colores */
@@ -799,3 +807,4 @@ public class Compilador extends javax.swing.JFrame {
     private javax.swing.JTable tblTokens;
     // End of variables declaration//GEN-END:variables
 }
+
