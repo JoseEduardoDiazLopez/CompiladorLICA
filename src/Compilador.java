@@ -492,6 +492,8 @@ public class Compilador extends javax.swing.JFrame {
         identDataType.put("aceleracion", "numero_decimal");
 
         identDataType.put("booleano", "dato_bol");
+        //operadores
+     
 
         try {
             for (Production id : identProd) {
@@ -526,18 +528,18 @@ public class Compilador extends javax.swing.JFrame {
                         if (id.lexicalCompRank(2).equals("identificador")) {
                             if (!identificadores.containsKey(id.lexemeRank(2))) {
 
-                                errors.add(new ErrorLSSL(80, "Error semántico {}: el valor asignado no es compatible ya que no esta declarado" + "[#, %]", id, false));
+                                errors.add(new ErrorLSSL(5, "Error semántico {}: el valor asignado no es compatible ya que no esta declarado" + "[#, %]", id, false));
 
                             } else {
                                 //Si es un identificador el token a asignar
                                 if (!identificadores.get(id.lexemeRank(0)).equals(identificadores.get(id.lexemeRank(2)))) {
-                                    errors.add(new ErrorLSSL(5, "Error semántico {}: No es compatible el tipo de dato del identificador a asignar se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
+                                    errors.add(new ErrorLSSL(6, "Error semántico {}: No es compatible el tipo de dato del identificador a asignar se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
                                 }
                             }
                         } else {
                             //si no es identificador
                             if (!identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(2))) {
-                                errors.add(new ErrorLSSL(6, "Error semántico {}: No es compatible la asignación se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
+                                errors.add(new ErrorLSSL(7, "Error semántico {}: No es compatible la asignación se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
 
                             }
                         }
@@ -557,7 +559,7 @@ public class Compilador extends javax.swing.JFrame {
                 System.out.println(identificadores.get(id.lexemeRank(2)));
 
                 if (!id.lexicalCompRank(0).equals("identificador")) {
-                    errors.add(new ErrorLSSL(30, "Error semántico {}: Asignación invalida, debe ser un identificador [#, %]", id, true));
+                    errors.add(new ErrorLSSL(8, "Error semántico {}: Asignación invalida, debe ser un identificador [#, %]", id, true));
                 }
 
                 if (id.lexicalCompRank(2).equals("identificador") || id.lexicalCompRank(4).equals("identificador")) {
@@ -570,22 +572,22 @@ public class Compilador extends javax.swing.JFrame {
                     else { // entra a este else cuando ya evaluo que existen lso operandos para comparar op/num num/op y 
                         if (id.lexicalCompRank(2).equals("identificador") && !id.lexicalCompRank(4).equals("identificador")) {
                             if (!identificadores.get(id.lexemeRank(0)).equals(identificadores.get(id.lexemeRank(2)))) {
-                                errors.add(new ErrorLSSL(11, "Error semántico {}: Variable invalida, se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
+                                errors.add(new ErrorLSSL(10, "Error semántico {}: Variable invalida, se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
                             } else if (!identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(4))) {
-                                errors.add(new ErrorLSSL(12, "Error semántico {}: No es compatible la asignación se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
+                                errors.add(new ErrorLSSL(11, "Error semántico {}: No es compatible la asignación se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
                             }
                         
                         }else if (id.lexicalCompRank(4).equals("identificador") && !id.lexicalCompRank(2).equals("identificador")) {
                                 
                             if (!identificadores.get(id.lexemeRank(0)).equals(identificadores.get(id.lexemeRank(4)))) {
-                                errors.add(new ErrorLSSL(13, "Error semántico {}: Variable invalida, se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
+                                errors.add(new ErrorLSSL(12, "Error semántico {}: Variable invalida, se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
                             } else if (!identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(2))) {
-                                errors.add(new ErrorLSSL(14, "Error semántico {}: No es compatible la asignación se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
+                                errors.add(new ErrorLSSL(13, "Error semántico {}: No es compatible la asignación se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
                             }
                         }else if (id.lexicalCompRank(2).equals("identificador") && id.lexicalCompRank(4).equals("identificador")) {
                             
                            if(!identificadores.get(id.lexemeRank(2)).equals(identificadores.get(id.lexemeRank(0)))||!identificadores.get(id.lexemeRank(4)).equals(identificadores.get(id.lexemeRank(0)))){
-                               errors.add(new ErrorLSSL(15, "Error semántico {}: No es compatible la asignación se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
+                               errors.add(new ErrorLSSL(14, "Error semántico {}: No es compatible la asignación se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
                            }
                         }
 
@@ -594,13 +596,14 @@ public class Compilador extends javax.swing.JFrame {
                         if (!id.lexicalCompRank(2).equals("identificador") && !id.lexicalCompRank(4).equals("identificador")) {
                             //Entra cuando ambos operandos no son identificadores
                             if (!identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(4)) || !identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(2))) {
-                                errors.add(new ErrorLSSL(7, "Error semántico {}: asignacion invalida, se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
+                                errors.add(new ErrorLSSL(15, "Error semántico {}: asignacion invalida, se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
                             }
                             
                             
-                        } 
-
-                    }
+                        }
+                       
+                     
+                    }//else
 
                 }//if padre
             }//for asigProd2
