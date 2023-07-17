@@ -28,7 +28,6 @@ import java.util.StringTokenizer;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
-
 public class Compilador extends javax.swing.JFrame {
 
     private String title;
@@ -37,12 +36,11 @@ public class Compilador extends javax.swing.JFrame {
     private ArrayList<ErrorLSSL> errors;
     private ArrayList<TextColor> textsColor;
     private Timer timerKeyReleased;
-    private ArrayList<Production> identProd,aritProd,entProd;
-    private ArrayList<Production> asigprod;
+    private ArrayList<Production> identProd, aritProd, entProd;
+    private ArrayList<Production> asigprod, asigprod2;
     private HashMap<String, String> identificadores;
     private boolean codeHasBeenCompiled = false;
 
-   
     public Compilador() {
         initComponents();
         init();
@@ -73,6 +71,7 @@ public class Compilador extends javax.swing.JFrame {
         textsColor = new ArrayList<>();
         identProd = new ArrayList<>();
         asigprod = new ArrayList<>();
+        asigprod2 = new ArrayList<>();
         entProd = new ArrayList<>();
         identificadores = new HashMap<>();
         Functions.setAutocompleterJTextComponent(new String[]{}, jtpCode, () -> {
@@ -235,29 +234,29 @@ public class Compilador extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenu2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu2ActionPerformed
-    
+
     }//GEN-LAST:event_jMenu2ActionPerformed
 
     private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
-          directorio.New();
+        directorio.New();
         clearFields();
     }//GEN-LAST:event_jMenu2MouseClicked
 
     private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MouseClicked
-          if (directorio.Open()) {
+        if (directorio.Open()) {
             colorAnalysis();
             clearFields();
         }
     }//GEN-LAST:event_jMenu1MouseClicked
 
     private void jMenu3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu3MouseClicked
-         if (directorio.Save()) {
+        if (directorio.Save()) {
             clearFields();
         }
     }//GEN-LAST:event_jMenu3MouseClicked
 
     private void jMenu4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu4MouseClicked
-         if (directorio.SaveAs()) {
+        if (directorio.SaveAs()) {
             clearFields();
         }
     }//GEN-LAST:event_jMenu4MouseClicked
@@ -271,6 +270,9 @@ public class Compilador extends javax.swing.JFrame {
             compile();
         }
     }//GEN-LAST:event_jMenu7MouseClicked
+    private void borrarprod() {
+
+    }
 
     private void compile() {
         clearFields();
@@ -280,6 +282,7 @@ public class Compilador extends javax.swing.JFrame {
         semanticAnalysis();
         printConsole();
         codeHasBeenCompiled = true;
+
     }
 
     private void lexicalAnalysis() {
@@ -308,42 +311,36 @@ public class Compilador extends javax.swing.JFrame {
 
     private void syntacticAnalysis() {
         Grammar gramatica = new Grammar(tokens, errors);
-          /* Eliminar errores */
-          gramatica.delete(new String[]{"error","ERROR"},1);
-          /* agrupar identificadores y parametros */
-           
-          
-            /* agrupar valores */
-      
-            gramatica.group("VALOR","numero_decimal | valor_cadena | dato_bol | numero_entero",true);
-            gramatica.group("OPERADOR","operador_suma| operador_resta| operador_multiplicacion | operador_division | operador_and | operador_or | operador_diferente");
-            gramatica.group("TIPO","dato_cadena | dato_entero | dato_entero | dato_fecha | dato_booleano",true);
-            gramatica.group("ENTIDADES", "entidades");
-        
-          
-           /* declarar variable */
-           gramatica.group("DECLARAR_VARIABLE","TIPO identificador operador_asignacion VALOR",true, identProd);
-           //No !
-           gramatica.group("DECLARAR_VARIABLE","TIPO identificador operador_asignacion",true,
-                   2,"Error sintáctico {}: falta el valor en la declaracion de variable en:[#,%]");
-           // no identificador
-        gramatica.group("DECLARAR_VARIABLE","TIPO operador_asignacion VALOR",true,
-                   3,"Error sintáctico {}: falta el IDENTIFICADOR en la declaracion de variable en:[#,%]");
+        /* Eliminar errores */
+        gramatica.delete(new String[]{"error", "ERROR"}, 1);
+        /* agrupar identificadores y parametros */
+
+ /* agrupar valores */
+        gramatica.group("VALOR", "numero_decimal | valor_cadena | dato_bol | numero_entero", true);
+        gramatica.group("OPERADOR", "operador_suma| operador_resta| operador_multiplicacion | operador_division | operador_and | operador_or | operador_diferente");
+        gramatica.group("TIPO", "dato_cadena | dato_entero | dato_entero | dato_fecha | dato_booleano", true);
+        gramatica.group("ENTIDADES", "entidades");
+
+        /* declarar variable */
+        gramatica.group("DECLARAR_VARIABLE", "TIPO identificador operador_asignacion VALOR", true, identProd);
+        //No !
+        gramatica.group("DECLARAR_VARIABLE", "TIPO identificador operador_asignacion", true,
+                2, "Error sintáctico {}: falta el valor en la declaracion de variable en:[#,%]");
+        // no identificador
+        gramatica.group("DECLARAR_VARIABLE", "TIPO operador_asignacion VALOR", true,
+                3, "Error sintáctico {}: falta el IDENTIFICADOR en la declaracion de variable en:[#,%]");
         //no asignacion
-         gramatica.group("DECLARAR_VARIABLE","TIPO identificador VALOR",true,
-                   4,"Error sintáctico {}: falta el identificador en la declaracion de variable en:[#,%]");
-            // no tipo de dato
-          // gramatica.group("DECLARAR_VARIABLE"," identificador operador_asignacion VALOR | OPERACIONES",true,
-                  // 5,"Error sintáctico {}: falta el valor en la declaracion de variable en:[#,%]");  
-           //gramatica.delete("TIPO",34,"Error sintáctico {}: se espera la estructura (tipo de dato)(identificador)(=)(valor) (Linea: # )");
-           gramatica.delete("TIPO",6,"Error sintáctico {}: se espera la estructura (tipo de dato)(identificador)(=)(valor) (Linea: # )");
-           
-          
-           
-       //ENTIDADES-----------
-       
-    gramatica.group("ENTIDADES_COMPZ", "ENTIDADES corchete_a VALOR corchete_c", true,entProd);
-        
+        gramatica.group("DECLARAR_VARIABLE", "TIPO identificador VALOR", true,
+                4, "Error sintáctico {}: falta el identificador en la declaracion de variable en:[#,%]");
+        // no tipo de dato
+        // gramatica.group("DECLARAR_VARIABLE"," identificador operador_asignacion VALOR | OPERACIONES",true,
+        // 5,"Error sintáctico {}: falta el valor en la declaracion de variable en:[#,%]");  
+        //gramatica.delete("TIPO",34,"Error sintáctico {}: se espera la estructura (tipo de dato)(identificador)(=)(valor) (Linea: # )");
+        gramatica.delete("TIPO", 6, "Error sintáctico {}: se espera la estructura (tipo de dato)(identificador)(=)(valor) (Linea: # )");
+
+        //ENTIDADES-----------
+        gramatica.group("ENTIDADES_COMPZ", "ENTIDADES corchete_a VALOR corchete_c", true, entProd);
+
         gramatica.group("ENTIDADES_COMP", "ENTIDADES VALOR corchete_c", true, 9, "error sintáctico {}: falta el corchete de apertura [#,%]");
         gramatica.finalLineColumn();
         gramatica.group("ENTIDADES_COMP", "ENTIDADES corchete_a VALOR", true, 10, "error sintáctico {}: falta el corchete de cierre [#,%]");
@@ -359,74 +356,66 @@ public class Compilador extends javax.swing.JFrame {
         gramatica.group("ENTIDADES_COMP", "ENTIDADES llaves_a llaves_c ", true, 18, "error sintáctico {}: no se permiten llaves , usa corchetes [#,%]");
 
         gramatica.group("ENTIDADES_COMP", "ENTIDADES", true, 19, "error sintáctico {}: se espera la estructura: entidad [ numero_entero ] [#,%]");
-   
-   
-   
-   //-----------------------------------------------------
-//operaciones
-gramatica.group("VALORES", "identificador | VALOR");
 
- gramatica.group("OPERACIONES","VALORES operador_asignacion VALORES OPERADOR VALORES",true, asigprod); 
- 
-  gramatica.group("OPERACIONEU","VALORES operador_asignacion VALORES",true, asigprod); 
- 
-    //falta de primer operador
-  gramatica.group("OPERACIONES"," (VALORES operador_asignacion VALORES OPERADOR)",true,7,"Error sintáctico {}: falta un operando en la operacion en:[#,%]");
-          // falta segundo operador (error en operaciones impares) 
+        //-----------------------------------------------------
+//operaciones
+        gramatica.group("VALORES", "identificador | VALOR");
+
+        gramatica.group("OPERACIONES", "VALORES operador_asignacion VALORES OPERADOR VALORES", true, asigprod2);
+
+        gramatica.group("OPERACIONEU", "VALORES operador_asignacion VALORES", true, asigprod);
+
+        //falta de primer operador
+        gramatica.group("OPERACIONES", " (VALORES operador_asignacion VALORES OPERADOR)", true, 7, "Error sintáctico {}: falta un operando en la operacion en:[#,%]");
+        // falta segundo operador (error en operaciones impares) 
 // gramatica.group("OPERACIONES","(operador_asignacion VALORES OPERADOR VALORES)",true,8,"Error sintáctico {}: falta el identificador en:[#,%]");
-  
-   gramatica.group("OPERACIONES","(VALORES VALORES OPERADOR VALORES )",true,8,"Error sintáctico {}: falta el operador de asignacion en:[#,%]");
- 
-      gramatica.group("OPERACIONES","VALORES operador_asignacion",true,58,"Error sintáctico {}: falta el valor a asignar en:[#,%]");
- //RANGO-------------------_____
- 
- gramatica.group("RANGO", "rango_entidad parentesis_a VALORES coma VALORES parentesis_c", true);
-        
-        gramatica.group("RANGO", 
+
+        gramatica.group("OPERACIONES", "(VALORES VALORES OPERADOR VALORES )", true, 8, "Error sintáctico {}: falta el operador de asignacion en:[#,%]");
+
+        gramatica.group("OPERACIONES", "VALORES operador_asignacion", true, 58, "Error sintáctico {}: falta el valor a asignar en:[#,%]");
+        //RANGO-------------------_____
+
+        gramatica.group("RANGO", "rango_entidad parentesis_a VALORES coma VALORES parentesis_c", true);
+
+        gramatica.group("RANGO",
                 "(rango_entidad VALORES coma VALORES parentesis_c) |"
-                        + "(rango_entidad coma VALORES parentesis_c) |"
-                        + "(rango_entidad coma parentesis_c) |"
-                        + "rango_entidad coma parentesis_c", true, 20, "\"error sintáctico {}: falta el parentesis de apertura [#,%]");
-                
-        gramatica.group("RANGO", 
+                + "(rango_entidad coma VALORES parentesis_c) |"
+                + "(rango_entidad coma parentesis_c) |"
+                + "rango_entidad coma parentesis_c", true, 20, "\"error sintáctico {}: falta el parentesis de apertura [#,%]");
+
+        gramatica.group("RANGO",
                 "(rango_entidad parentesis_a (VALORES coma)? parentesis_c) |"
-                        + "rango_entidad parentesis_a coma parentesis_c", true, 21, "\"error sintáctico {}: falta el valor del rango[#,%]");      
-        
-        gramatica.group("RANGO", 
+                + "rango_entidad parentesis_a coma parentesis_c", true, 21, "\"error sintáctico {}: falta el valor del rango[#,%]");
+
+        gramatica.group("RANGO",
                 "rango_entidad parentesis_a (VALORES coma VALORES) |"
-                        + "(rango_entidad parentesis_a coma VALORES) |"
-                        + "(rango_entidad parentesis_a VALORES coma) |"
-                        + "rango_entidad parentesis_a coma", true, 22, "\"error sintáctico {}: falta el parentesis de cierre [#,%]");
-        
-        gramatica.group("RANGO", 
+                + "(rango_entidad parentesis_a coma VALORES) |"
+                + "(rango_entidad parentesis_a VALORES coma) |"
+                + "rango_entidad parentesis_a coma", true, 22, "\"error sintáctico {}: falta el parentesis de cierre [#,%]");
+
+        gramatica.group("RANGO",
                 "rango_entidad parentesis_a VALORES coma VALOR_NO_E parentesis_c |"
-                        + "rango_entidad parentesis_a VALOR_NO_E coma VALORES parentesis_c|", true, 23, "\"error sintáctico {}: falta el parentesis de cierre [#,%]");
-        
+                + "rango_entidad parentesis_a VALOR_NO_E coma VALORES parentesis_c|", true, 23, "\"error sintáctico {}: falta el parentesis de cierre [#,%]");
+
         gramatica.group("RANGO", "rango_entidad", true, 24, "\"error sintáctico {}: La estructura es: rango(IDENTIFICADOR O NUMERO ENTERO,IDENTIFICADOR O NUMERO ENTERO) [#,%]");
-       
+
         gramatica.group("ENT", "entidad_unica | ENTIDADES_COMP");
         gramatica.group("ENTI", "ENT punto (FUNCIONES | RANGO)");
-       // gramatica.group("ENTI", "ENT (FUNCIONES | RANGO)", true, 32, "error sintáctico {}: el punto para llamar metodo[#,%]");
- 
- 
-       
-            
-           //FUNCIONES /// COMPLETAR.-----
-           
+        // gramatica.group("ENTI", "ENT (FUNCIONES | RANGO)", true, 32, "error sintáctico {}: el punto para llamar metodo[#,%]");
+
+        //FUNCIONES /// COMPLETAR.-----
         gramatica.group("FUNCION", "reservada_imprime | conversion | reservada_leer");
         gramatica.group("FUNCIONES", "FUNCION parentesis_a (VALORES | (VALORES coma VALORES)+) parentesis_c", true);
         gramatica.group("FUNCIONES", "FUNCION parentesis_a parentesis_c", true, 25, "error sintáctico {}: faltan parametros [#,%]");
         gramatica.group("FUNCIONES", "FUNCION (VALORES | (VALORES coma VALORES)+) parentesis_c", true, 26, "error sintáctico {}: falta el parentesis de apertura [#,%]");
         gramatica.group("FUNCIONES", "FUNCION parentesis_a (VALORES | (VALORES coma VALORES)+)", true, 27, "error sintáctico {}: falta el parentesis de cierre [#,%]");
 
-        
         //-------------------
-        
-         gramatica.group("CODIGO_DF", "(DECLARAR_VARIABLE | OPERACIONES | OPERACIONEU | RANGO | FUNCION | ENTIDADES_COMPZ)", true);
-         
+        gramatica.group("CODIGO_DF", "(DECLARAR_VARIABLE | OPERACIONES | OPERACIONEU | RANGO | FUNCION | ENTIDADES_COMPZ)", true);
+
         gramatica.group("MET", "reservada_inicio | reservada_principal | reservada_funcion");
-        
-      /*  gramatica.loopForFunExecUntilChangeNotDetected(()->{
+
+        /*  gramatica.loopForFunExecUntilChangeNotDetected(()->{
             gramatica.group("METODO","MET parentesis_a parentesis_a parentesis_c llaves_a CODIGO_DF llaves_c", true);
                    });
               gramatica.loopForFunExecUntilChangeNotDetected(()->{ 
@@ -438,7 +427,6 @@ gramatica.group("VALORES", "identificador | VALOR");
                    gramatica.group("CODIGO_DF","CODIGO_DF");
               
               });*/
-        
         gramatica.group("METODO", "MET parentesis_a parentesis_c llaves_a (CODIGO_DF)*? llaves_c", true);
         gramatica.group("METODO", "MET parentesis_a parentesis_c (CODIGO_DF)*?llaves_c", true, 31, "error sintáctico {}: falta la llave de apertura [#,%]");
         gramatica.group("METODO", "MET parentesis_a parentesis_c llaves_a (CODIGO_DF)*?", true, 30, "error sintáctico {}: falta la llave de cierre [#,%]");
@@ -446,11 +434,7 @@ gramatica.group("VALORES", "identificador | VALOR");
         gramatica.group("METODO", "MET parentesis_c llaves_a (CODIGO_DF)*? llaves_c", true, 29, "error sintáctico {}: falta parentesis de apertura [#,%]");
         gramatica.group("METODO", "MET parentesis_a llaves_a (CODIGO_DF)*? llaves_c", true, 30, "error sintáctico {}: falta parentesis de cierre [#,%]");
         gramatica.group("METODO", "MET (VALORES | PARAMETROS) llaves_a (CODIGO_DF)*? llaves_c", true, 31, "error sintáctico {}: faltan parentesis [#,%]");
-           
-           
-         
 
-            
         //definir estructura condición-----------------------
         gramatica.group("CONDICION_D1", "reservada_si parentesis_a VALORES OPERADOR VALORES parentesis_c doblePunto (CODIGO_DF)* doblePunto");
         gramatica.group("CONDICION_D", "(VALORES | identificador) ((operador_logico | operador_relacional) )+ ", true, 32, "error sintáctico {}: faltan un operador [#,%]");
@@ -478,16 +462,15 @@ gramatica.group("VALORES", "identificador | VALOR");
         gramatica.group("CICLO_H", "reservada_ciclo parentesis_a CONDICION_CICLO parentesis_c llaves_a (CODIGO_DF)*? ", true, 42, "error sintáctico {}: falta la llave de cierre [#,%]");
         gramatica.group("CICLO_H", "reservada_ciclo CONDICION_CICLO llaves_a (CODIGO_DF)*? ", true, 43, "error sintáctico {}: faltan parentesis [#,%]");
         gramatica.group("CICLO_H", "reservada_ciclo parentesis_a CONDICION_CICLO parentesis_c (CODIGO_DF)*?", true, 44, "error sintáctico {}: falta las llaves [#,%]");
-           
+
         /* Mostrar gramáticas */
         gramatica.show();
     }
 
     private void semanticAnalysis() {
         System.out.println("Anális semántico:" + identProd.size());
-        
+
         //Analisis semántico para las declaraciones de variables 
-        
         //HashMap que tiene como clave el lexema y valor el tipo de dato valido
         HashMap<String, String> identDataType = new HashMap<>();
         //Para las cadenas
@@ -507,122 +490,129 @@ gramatica.group("VALORES", "identificador | VALOR");
         identDataType.put("tiempo", "numero_decimal");
         identDataType.put("temperatura", "numero_decimal");
         identDataType.put("aceleracion", "numero_decimal");
-        
+
         identDataType.put("booleano", "dato_bol");
-        
-        try{
-            for(Production id: identProd) {
-            if(!identDataType.get(id.lexemeRank(0)).equals(id.lexicalCompRank(-1))) {
-                errors.add(new ErrorLSSL(1, "Error semántico {}: Valor no compatible es con el tipo de dato [#, %]",id,true));
-            }/*else if(identDataType.get(id.lexemeRank(0)).equals("dato_fecha") && !id.lexemeRank(-1).matches("'[0-9][0-9]/[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9]'")) {
+
+        try {
+            for (Production id : identProd) {
+                if (!identDataType.get(id.lexemeRank(0)).equals(id.lexicalCompRank(-1))) {
+                    errors.add(new ErrorLSSL(1, "Error semántico {}: Valor no compatible es con el tipo de dato [#, %]", id, true));
+                }/*else if(identDataType.get(id.lexemeRank(0)).equals("dato_fecha") && !id.lexemeRank(-1).matches("'[0-9][0-9]/[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9]'")) {
                 errors.add(new ErrorLSSL(2, "Error semántico {}: La fecha no tiene el formato correcto [#, %]",id,false));
             
-            }*/else {
-                if (identificadores.containsKey(id.lexemeRank(1))) {
-                    errors.add(new ErrorLSSL(2, "Error semántico {}: Variable ya declarada [#, %]", id, false));
-                }else {
-                   identificadores.put(id.lexemeRank(1), id.lexicalCompRank(-1)); 
+            }*/ else {
+                    if (identificadores.containsKey(id.lexemeRank(1))) {
+                        errors.add(new ErrorLSSL(2, "Error semántico {}: Variable ya declarada [#, %]", id, false));
+                    } else {
+                        identificadores.put(id.lexemeRank(1), id.lexicalCompRank(-1));
+                    }
+
                 }
-                
-            }
-            
-            System.out.println(id.lexemeRank(1)+" : "+ id.lexicalCompRank(-1));
-            
-        }//for identProd
-        //Analisis de asignación 
-        for(Production id: asigprod) {
-            if(!id.lexicalCompRank(0).equals("identificador")){
-                errors.add(new ErrorLSSL(3, "Error semántico {}: Asignación invalida, debe ser un identificador [#, %]", id, true));
-            }else {
-                if(!identificadores.containsKey(id.lexemeRank(0))) {
-                    errors.add(new ErrorLSSL(4, "Error semántico {}: La variable no ha sido inicializada [#, %]", id, false));
-                }else {
-                    if(id.getSizeTokens()==3) {
+
+                System.out.println(id.lexemeRank(1) + " : " + id.lexicalCompRank(-1));
+
+            }//for identProd
+            //Analisis de asignación 
+            for (Production id : asigprod) {
+                if (!id.lexicalCompRank(0).equals("identificador")) {
+                    errors.add(new ErrorLSSL(3, "Error semántico {}: Asignación invalida, debe ser un identificador [#, %]", id, true));
+                } else {
+                    if (!identificadores.containsKey(id.lexemeRank(0))) {
+                        errors.add(new ErrorLSSL(4, "Error semántico {}: La variable no ha sido inicializada [#, %]", id, false));
+                    } else {
+
                         //Es cuando la asignación no tiene operaciones
                         //Existen dos posibles, que el componente lexico que se asigna sea un identificador
-                     
-                            if(id.lexicalCompRank(2).equals("identificador")) {
-                                  if(!identificadores.containsKey(id.lexemeRank(2))){
- 
-                                    errors.add(new ErrorLSSL(80, "Error semántico {}: el valor asignado no es compatible ya que no esta declarado"+"[#, %]", id, false));   
-        
-         } else{
+                        if (id.lexicalCompRank(2).equals("identificador")) {
+                            if (!identificadores.containsKey(id.lexemeRank(2))) {
+
+                                errors.add(new ErrorLSSL(80, "Error semántico {}: el valor asignado no es compatible ya que no esta declarado" + "[#, %]", id, false));
+
+                            } else {
                                 //Si es un identificador el token a asignar
-                               if(!identificadores.get(id.lexemeRank(0)).equals(identificadores.get(id.lexemeRank(2)))){
-                                errors.add(new ErrorLSSL(5, "Error semántico {}: No es compatible el tipo de dato del identificador a asignar se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));
-                               }}
-                            }else {
-                                //si no es identificador
-                               if(!identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(2))){
-                                errors.add(new ErrorLSSL(6, "Error semántico {}: No es compatible la asignación se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));
-                               
-                         
-                            }
-                        }
-                        
-                    }else if(id.getSizeTokens()==5) {
-                        System.out.println("CompLex: "+id.lexicalCompRank(0)+" - Tipo de dato "+identificadores.get(id.lexemeRank(0))+" - Identificador "+id.lexemeRank(0));
-                        System.out.println(" = ");
-                        System.out.println("CompLex: "+id.lexicalCompRank(2)+" - Tipo de dato "+identificadores.get(id.lexemeRank(2))+" - Identificador "+id.lexemeRank(2));
-                        System.out.println(id.lexemeRank(3));
-                        System.out.println("CompLex: "+id.lexicalCompRank(4)+" - Tipo de dato "+identificadores.get(id.lexemeRank(4))+" - Identificador "+id.lexemeRank(4));
-                        //Cuando la asignación tiene operaciones, las operaciones son binarias
-                        System.out.println(identificadores.get(id.lexemeRank(2)));
-                        
-     if(!id.lexicalCompRank(0).equals("identificador")){
-                errors.add(new ErrorLSSL(30, "Error semántico {}: Asignación invalida, debe ser un identificador [#, %]", id, true));
-            }                     
- if(!identificadores.containsKey(id.lexemeRank(2))){
- 
- errors.add(new ErrorLSSL(9, "Error semántico {}: el valor asignado no es compatible ya que no esta declarado"+"[#, %]", id, false));   
-                            
- }else{
-  
-        
-if(!identificadores.containsKey(id.lexemeRank(4))){
- 
- errors.add(new ErrorLSSL(8, "Error semántico {}: el valor asignado no es compatible ya que no esta declarado"+"[#, %]", id, false));   
-        
-         }}
-                            if(!(id.lexicalCompRank(2).equals("identificador") && id.lexicalCompRank(4).equals("identificador"))) {
-                            //Entra cuando ambos operandos no son identificadores
-  if(!(identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(4)))){
-  errors.add(new ErrorLSSL(7, "Error semántico {}: asignacion invalida, se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));   
-                            } 
-   }
-                            }
-       
-        else if(id.lexicalCompRank(2).equals("identificador") && !id.lexicalCompRank(4).equals("identificador")){
-                                if(!identificadores.get(id.lexemeRank(0)).equals(identificadores.get(id.lexemeRank(2)))) {
-                                    errors.add(new ErrorLSSL(11, "Error semántico {}: Variable invalida, se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));   
-                                }else if(!identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(4))) {
-                                    errors.add(new ErrorLSSL(12, "Error semántico {}: No es compatible la asignación se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));
-                                }
-                            }else if(id.lexicalCompRank(4).equals("identificador") && !id.lexicalCompRank(2).equals("identificador")){
-                                if(!identificadores.get(id.lexemeRank(0)).equals(identificadores.get(id.lexemeRank(4)))) {
-                                    errors.add(new ErrorLSSL(13, "Error semántico {}: Variable invalida, se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));   
-                                }else if(!identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(2))) {
-                                    errors.add(new ErrorLSSL(14, "Error semántico {}: No es compatible la asignación se esperaba un "+identificadores.get(id.lexemeRank(0))+"[#, %]", id, false));
+                                if (!identificadores.get(id.lexemeRank(0)).equals(identificadores.get(id.lexemeRank(2)))) {
+                                    errors.add(new ErrorLSSL(5, "Error semántico {}: No es compatible el tipo de dato del identificador a asignar se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
                                 }
                             }
+                        } else {
+                            //si no es identificador
+                            if (!identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(2))) {
+                                errors.add(new ErrorLSSL(6, "Error semántico {}: No es compatible la asignación se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
+
+                            }
                         }
-                        
-                        
-                                            
-                    
-                   
+                    }
                 }
+
             }//for asigProd
-            
-        }//try
-        catch(Exception ex){
+
+            for (Production id : asigprod2) {
+
+                System.out.println("CompLex: " + id.lexicalCompRank(0) + " - Tipo de dato " + identificadores.get(id.lexemeRank(0)) + " - Identificador " + id.lexemeRank(0));
+                System.out.println(" = ");
+                System.out.println("CompLex: " + id.lexicalCompRank(2) + " - Tipo de dato " + identificadores.get(id.lexemeRank(2)) + " - Identificador " + id.lexemeRank(2));
+                System.out.println(id.lexemeRank(3));
+                System.out.println("CompLex: " + id.lexicalCompRank(4) + " - Tipo de dato " + identificadores.get(id.lexemeRank(4)) + " - Identificador " + id.lexemeRank(4));
+                //Cuando la asignación tiene operaciones, las operaciones son binarias
+                System.out.println(identificadores.get(id.lexemeRank(2)));
+
+                if (!id.lexicalCompRank(0).equals("identificador")) {
+                    errors.add(new ErrorLSSL(30, "Error semántico {}: Asignación invalida, debe ser un identificador [#, %]", id, true));
+                }
+
+                if (id.lexicalCompRank(2).equals("identificador") || id.lexicalCompRank(4).equals("identificador")) {
+
+                    if ((!identificadores.containsKey(id.lexemeRank(2))&& id.lexicalCompRank(2).equals("identificador")) || (!identificadores.containsKey(id.lexemeRank(4))&& id.lexicalCompRank(4).equals("identificador"))) {
+                          // aqui lanza error cuando algun identificador de los operandos no exista
+                        errors.add(new ErrorLSSL(9, "Error semántico {}: asignación invalida la variable no está declarada" + "[#, %]", id, false));
+
+                    }
+                    else { // entra a este else cuando ya evaluo que existen lso operandos para comparar op/num num/op y 
+                        if (id.lexicalCompRank(2).equals("identificador") && !id.lexicalCompRank(4).equals("identificador")) {
+                            if (!identificadores.get(id.lexemeRank(0)).equals(identificadores.get(id.lexemeRank(2)))) {
+                                errors.add(new ErrorLSSL(11, "Error semántico {}: Variable invalida, se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
+                            } else if (!identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(4))) {
+                                errors.add(new ErrorLSSL(12, "Error semántico {}: No es compatible la asignación se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
+                            }
+                        
+                        }else if (id.lexicalCompRank(4).equals("identificador") && !id.lexicalCompRank(2).equals("identificador")) {
+                                
+                            if (!identificadores.get(id.lexemeRank(0)).equals(identificadores.get(id.lexemeRank(4)))) {
+                                errors.add(new ErrorLSSL(13, "Error semántico {}: Variable invalida, se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
+                            } else if (!identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(2))) {
+                                errors.add(new ErrorLSSL(14, "Error semántico {}: No es compatible la asignación se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
+                            }
+                        }else if (id.lexicalCompRank(2).equals("identificador") && id.lexicalCompRank(4).equals("identificador")) {
+                            
+                           if(!identificadores.get(id.lexemeRank(2)).equals(identificadores.get(id.lexemeRank(0)))||!identificadores.get(id.lexemeRank(4)).equals(identificadores.get(id.lexemeRank(0)))){
+                               errors.add(new ErrorLSSL(15, "Error semántico {}: No es compatible la asignación se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
+                           }
+                        }
+
+                        
+
+                        if (!id.lexicalCompRank(2).equals("identificador") && !id.lexicalCompRank(4).equals("identificador")) {
+                            //Entra cuando ambos operandos no son identificadores
+                            if (!identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(4)) || !identificadores.get(id.lexemeRank(0)).equals(id.lexicalCompRank(2))) {
+                                errors.add(new ErrorLSSL(7, "Error semántico {}: asignacion invalida, se esperaba un " + identificadores.get(id.lexemeRank(0)) + "[#, %]", id, false));
+                            }
+                            
+                            
+                        } 
+
+                    }
+
+                }//if padre
+            }//for asigProd2
+        }
+                catch(Exception ex){
             
             System.out.println("NullPointerException");
         }
-        
-        
 
-    }
+            }
+
+    
 
     private void colorAnalysis() {
         /* Limpiar el arreglo de colores */
@@ -642,58 +632,61 @@ if(!identificadores.containsKey(id.lexemeRank(4))){
                     break;
                 }
                 textsColor.add(textColor);
-            } 
-            
+            }
+
         } catch (FileNotFoundException ex) {
             System.out.println("El archivo no Existe " + ex.getMessage());
         } catch (IOException ex) {
             System.out.println("Error Al guardar " + ex.getMessage());
-        } 
-        
-        
+        }
+
         Functions.colorTextPane(textsColor, jtpCode, new Color(255, 255, 255));
     }
-    public String id(String n){
-      
+
+    public String id(String n) {
+
         return "";
     }
+
     private void fillTableTokens() {
-             
+
         tokens.forEach(token -> {
-           
-            Object[] data = new Object[]{id(token.getLexicalComp()),token.getLexicalComp(), token.getLexeme(), "[" + token.getLine() + ", " + token.getColumn() + "]"};
+
+            Object[] data = new Object[]{id(token.getLexicalComp()), token.getLexicalComp(), token.getLexeme(), "[" + token.getLine() + ", " + token.getColumn() + "]"};
             Functions.addRowDataInTable(tblTokens, data);
         });
     }
-private int numerrores(){
-    
-   String line = System.getProperty("line.separator");
-   
-String demo = jtaOutputConsole.getText();
 
-       int replace = demo.length() - demo.replace("\n", "").length();
-    
-return replace-3;
+    private int numerrores() {
 
-}
+        String line = System.getProperty("line.separator");
+
+        String demo = jtaOutputConsole.getText();
+
+        int replace = demo.length() - demo.replace("\n", "").length();
+
+        return replace - 3;
+
+    }
+
     private void printConsole() {
         int sizeErrors = errors.size();
         if (sizeErrors > 0) {
             Functions.sortErrorsByLineAndColumn(errors);
             String strErrors = "\n";
-            for (ErrorLSSL error : errors) { 
+            for (ErrorLSSL error : errors) {
                 String strError = String.valueOf(error);
                 strErrors += strError + "\n";
-               
+
             }
-             int replace = strErrors.length() - strErrors.replace("\n", "").length();
-             int a=replace-1;
-            jtaOutputConsole.setText("Compilación lista\n" + strErrors + "\n La compilación terminó con " + a +" ERRORES...");
+            int replace = strErrors.length() - strErrors.replace("\n", "").length();
+            int a = replace - 1;
+            jtaOutputConsole.setText("Compilación lista\n" + strErrors + "\n La compilación terminó con " + a + " ERRORES...");
         } else {
             jtaOutputConsole.setText("Compilación sin errores\n");
         }
         jtaOutputConsole.setCaretPosition(0);
-        
+
     }
 
     private void clearFields() {
@@ -703,6 +696,7 @@ return replace-3;
         errors.clear();
         identProd.clear();
         asigprod.clear();
+        asigprod2.clear();
         identificadores.clear();
         codeHasBeenCompiled = false;
     }
@@ -711,7 +705,7 @@ return replace-3;
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-     
+
         java.awt.EventQueue.invokeLater(() -> {
             try {
                 UIManager.setLookAndFeel(new FlatIntelliJLaf());
