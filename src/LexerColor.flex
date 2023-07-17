@@ -117,7 +117,7 @@ motor | ventilador | motor_arranque | acelerador | coolant | montadora | modelo 
 "." { /*Ignorar*/ }
 
 ":" { return textColor(yychar, yylength(), new Color(244, 0, 255));}
-
+"$" {return textColor(yychar, yylength(), new Color(244, 0, 255));}
 
 
 . { /*Ignorar*/ }
