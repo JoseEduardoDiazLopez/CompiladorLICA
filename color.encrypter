@@ -1,6 +1,15 @@
-principal() {
- cadena _ed = ''
-torque _trq = 2
-booleano _caca = falso
-_trq =  _tr
+principal(){
+rango (2,34) 
+aceite[4]
+
+entero _a=1 
+entero  _b=1
+torque _c = 2
+cadena _t = 'a'
+booleano _d = falso
+
+_a = _b / 0
+
 }
+
+
