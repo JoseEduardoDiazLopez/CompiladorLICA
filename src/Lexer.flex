@@ -81,7 +81,7 @@ si_no { return token(yytext(), "reservada_si_no", yyline, yycolumn); }
 
 //componentes léxicos de un ciclo
 ciclo { return token(yytext(), "reservada_ciclo", yyline, yycolumn); }
-mientras { return token(yytext(), "while", yyline, yycolumn); }
+for { return token(yytext(), "while", yyline, yycolumn); }
 
 
 //son las funciones que se pueden definir a una entidades o entidad_unica

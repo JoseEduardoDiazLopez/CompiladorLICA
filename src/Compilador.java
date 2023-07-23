@@ -25,6 +25,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
@@ -47,7 +49,7 @@ public class Compilador extends javax.swing.JFrame {
     }
 
     private void init() {
-        title = "LEARN++";
+        title = "LICA";
         setLocationRelativeTo(null);
         setTitle(title);
         directorio = new Directory(this, jtpCode, title, ".Learn");
@@ -321,7 +323,9 @@ public class Compilador extends javax.swing.JFrame {
         fillTableTokens();
         syntacticAnalysis();
         semanticAnalysis();
+       
         printConsole();
+         fillTablaCuadruplos();
         codeHasBeenCompiled = true;
 
     }
@@ -466,8 +470,8 @@ public class Compilador extends javax.swing.JFrame {
         gramatica.group("SI", "E_SI parentesis_a VALORES VALORES parentesis_c  doblePunto (DECLARAR_VARIABLE |  OPERACIONES | OPERACIONEU | RANGO | FUNCION | ENTIDADES_COMPZ | FUNCIONES)*? doblePunto", true, 42, "error sintáctico {}: falta operador en la condicion [#,%]");
 
         //definir ciclo
-        gramatica.group("CICLO_H", "while parentesis_a VALORES OPERADOR VALORES parentesis_c signociclo (DECLARAR_VARIABLE |  OPERACIONES | OPERACIONEU | RANGO | FUNCION | ENTIDADES_COMPZ | FUNCIONES | SI | SI_S)*? signociclo");
-        gramatica.group("CICLO_H2", "while parentesis_a VALORES OPERADOR VALORES parentesis_c signociclo", true, 43, "error sintáctico {}: falta cerrar el ciclo [#,%]");
+        gramatica.group("CICLO_H", "while parentesis_a VALORES parentesis_c signociclo (DECLARAR_VARIABLE |  OPERACIONES | OPERACIONEU | RANGO | FUNCION | ENTIDADES_COMPZ | FUNCIONES | SI | SI_S)*? signociclo");
+        gramatica.group("CICLO_H2", "while parentesis_a VALORES parentesis_c signociclo", true, 43, "error sintáctico {}: falta cerrar el ciclo [#,%]");
 
         gramatica.group("CODIGO_DF", "(DECLARAR_VARIABLE | OPERACIONES | OPERACIONEU | RANGO | FUNCION | ENTIDADES_COMPZ | FUNCIONES | SI  | SI_S | CICLO_H)", true);
 
@@ -719,6 +723,99 @@ public class Compilador extends javax.swing.JFrame {
         }
 
         Functions.colorTextPane(textsColor, jtpCode, new Color(255, 255, 255));
+    }//color
+    ///inicio
+    
+        public ArrayList<String> matches(String text, String regex) {
+        ArrayList<String> texts = new ArrayList();
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(text);
+        while (matcher.find()) {
+            System.out.println("Found text: " + matcher.group());
+            System.out.println("Start index: " + matcher.start());
+            System.out.println("End index: " + matcher.end());
+            System.out.println("=============================");
+            texts.add(matcher.group());
+        }
+        return texts;
+    }
+    public ArrayList<String> codigoIntermedio() {
+        String codigo = jtpCode.getText();
+        // codigo = codigo.replaceAll("//.*", "");
+        codigo = codigo.replaceAll("[\r]+", "");
+        System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXx");
+        System.out.println(codigo);
+        System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXx");
+      String expregularnumero ="(for[\t\s]*\\([\t\s]*([0-9]+|\\$[A-Za-zÑñÁÉÍÓÚ]+)[\t\s]*\\))|(si[\t\s]*\\([\t\s]*([0-9]+|\\$[A-Za-zÑñÁÉÍÓÚ]+)[\t\s]*(>|<|>=|<=|==|!=)[\t\s]*([0-9]+|\\$[A-Za-zÑñÁÉÍÓÚ]+)[\t\s]*\\))";
+        return matches(codigo,expregularnumero);
+      
+    }
+    private void fillTablaCuadruplos() {
+        String Estado = "";
+        String If_For = "";
+        String cadena = "";
+        String cadenaOpti = "";
+        ArrayList<String> Arre = codigoIntermedio();
+        System.out.println("=================\n" + Arre);
+  
+
+        for (int a = 0; a < Arre.size(); a++) {
+            ArbolExpresion arbolExpresionArit = new ArbolExpresion();
+            String cad = Arre.get(a);
+            String Cadena[] = arbolExpresionArit.crearArbol(cad);
+            cadena = cadena + Cadena[0];
+            cadenaOpti = cadenaOpti + Cadena[1];
+            if (cad.contains("si")) {
+                If_For = "si";
+                if (Arre.get(a + 1).equals(":")){
+                    cadenaOpti = cadenaOpti + "\n\n label L1\n";
+                    cadena = cadena + "\n\n label L1\n";
+                    Estado = "NoCodigo";
+                } else {
+                    Estado = "SiCodigo";
+                }
+            }
+            // "\n goto L1\n label L2\n\n" ; 
+            if (cad.contains("mientras")) {
+                If_For = "mientras";
+                if (Arre.get(a + 1).equals("$")) {
+                    cadenaOpti = cadenaOpti + "\n\n goto L1\n label L2\n\n";
+                    cadena = cadena + "\n\n goto L1\n label L2\n\n";
+                    Estado = "NoCodigo";
+                } else {
+                    Estado = "SiCodigo";
+                }
+            }
+            if (cad.contains(":") && Estado.equals("SiCodigo") && If_For.equals("si")) {
+                cadenaOpti = cadenaOpti + "\n\n label L1\n";
+                cadena = cadena + "\n\n label L1\n";
+                If_For = "NoBucles";
+            }
+            if (cad.contains("$") && Estado.equals("SiCodigo") && If_For.equals("mientras")) {
+                cadenaOpti = cadenaOpti + "\n\n goto L1\n label L2\n\n";
+                cadena = cadena + "\n\n goto L1\n label L2\n\n";
+                If_For = "NoBucles";
+            }
+            System.out.println("CadenaOptimazada\n" + Cadena[1]);
+
+            ArrayList<Cuadruplo> cuadruplos = arbolExpresionArit.getCuadruplos();
+            for (int i = 0; i < cuadruplos.size(); i++) {
+                Cuadruplo cuadruplo = cuadruplos.get(i);
+                String operador = cuadruplo.getOp();
+                String argu1 = cuadruplo.getArg1();
+                String argu2 = cuadruplo.getArg2();
+                String resul = cuadruplo.getR();
+                Object[] data = new Object[]{operador, argu1, argu2, resul};
+                
+                System.out.println(operador + " " + argu1 + " " + argu2 + " " + resul);
+            }
+        }
+        System.out.println("Tokens listos");
+        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&\n" + cadena);
+       // System.out.println("Optimizado\n" + cadenaOpti);
+       // CodigoOptimizado = cadenaOpti;
+        CampoIntermedio.setText(cadena);
+    
     }
 
     public String id(String n) {
@@ -764,7 +861,7 @@ public class Compilador extends javax.swing.JFrame {
             jtaOutputConsole.setText("Compilación sin errores\n");
         }
         jtaOutputConsole.setCaretPosition(0);
-
+ 
     }
 
     private void clearFields() {
