@@ -29,11 +29,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
+import java.io.IOException;
 
 public class Compilador extends javax.swing.JFrame {
 
     private String title;
     private Directory directorio;
+    private Directory directorio2;
     private ArrayList<Token> tokens;
     private ArrayList<ErrorLSSL> errors;
     private ArrayList<TextColor> textsColor;
@@ -53,6 +55,7 @@ public class Compilador extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         setTitle(title);
         directorio = new Directory(this, jtpCode, title, ".Learn");
+        directorio2 = new Directory(this,CampoIntermedio1,title,".asm");
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -101,6 +104,7 @@ public class Compilador extends javax.swing.JFrame {
         jScrollPane5 = new javax.swing.JScrollPane();
         CampoIntermedio1 = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu5 = new javax.swing.JMenu();
         jMenu1 = new javax.swing.JMenu();
@@ -172,6 +176,13 @@ public class Compilador extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Codigo Intermedio");
 
+        jButton1.setText("Guardar Asm");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout rootPanelLayout = new javax.swing.GroupLayout(rootPanel);
         rootPanel.setLayout(rootPanelLayout);
         rootPanelLayout.setHorizontalGroup(
@@ -184,10 +195,6 @@ public class Compilador extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(rootPanelLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jLabel2)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(rootPanelLayout.createSequentialGroup()
                         .addComponent(jScrollPane2)
                         .addGap(12, 12, 12))
                     .addGroup(rootPanelLayout.createSequentialGroup()
@@ -195,12 +202,21 @@ public class Compilador extends javax.swing.JFrame {
                             .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(rootPanelLayout.createSequentialGroup()
                                 .addGap(9, 9, 9)
-                                .addComponent(jLabel3)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel3))
+                            .addGroup(rootPanelLayout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(jLabel2)))
                         .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addGroup(rootPanelLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rootPanelLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton1)
+                                .addGap(148, 148, 148))))))
         );
         rootPanelLayout.setVerticalGroup(
             rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -217,7 +233,9 @@ public class Compilador extends javax.swing.JFrame {
                             .addComponent(jScrollPane5)
                             .addComponent(jScrollPane4))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)))
+                        .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(jButton1))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(rootPanelLayout.createSequentialGroup()
@@ -331,6 +349,11 @@ public class Compilador extends javax.swing.JFrame {
             compile();
         }
     }//GEN-LAST:event_jMenu7MouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        directorio2.SaveAs();
+        directorio2.Save();
+    }//GEN-LAST:event_jButton1ActionPerformed
     private void borrarprod() {
 
     }
@@ -344,6 +367,7 @@ public class Compilador extends javax.swing.JFrame {
        
         printConsole();
          fillTablaCuadruplos();
+         llenarcodigoObjeto();
         codeHasBeenCompiled = true;
 
     }
@@ -847,6 +871,88 @@ public class Compilador extends javax.swing.JFrame {
         CampoIntermedio.setText(cadena);
     
     }
+    
+    
+public ArrayList<String> codigoObjeto(){
+   String codigoI = CampoIntermedio.getText();
+   codigoI = codigoI.replaceAll("[\r]+", "");
+    String expregular ="(\\_[A-Za-zÑñÁÉÍÓÚ]+[\\t\\s]*=[\\t\\s]*([0-9]+|\".*\"))|"
+            +"(imprime\\('[^']*'\\))";
+    //si(_torque<150)
+    return matches(codigoI,expregular);
+}
+
+public void llenarcodigoObjeto(){
+     String cadenaObjeto = ".model small\n" +
+".stack \n" +
+".data \n";
+     ArrayList<String> Arre = codigoObjeto();
+        System.out.println("pppppppppppppppppppppppppp\n" + Arre);
+        int h=1;
+         for (int a = 0; a < Arre.size(); a++) {
+            ArbolExpresion arbolExpresionArit = new ArbolExpresion();
+            String cad = Arre.get(a);
+            String Cadena[] = arbolExpresionArit.crearArbol(cad);
+            cadenaObjeto = cadenaObjeto + Cadena[0];
+           
+              if (cad.contains("_")) {
+      
+                cadenaObjeto = cadenaObjeto.replace("=", " dw ");
+                
+              cadenaObjeto = cadenaObjeto + "";   
+              }
+                 if (cad.contains("imprime")) {
+                     
+                    
+      cadenaObjeto = cadenaObjeto.replace("imprime(", "mensaje"+h+" db ");
+      cadenaObjeto = cadenaObjeto.replace("')", "',0ah,0dh");
+     
+              cadenaObjeto = cadenaObjeto + "";  
+              
+                 h++;
+              }
+                 if(h==3){
+                                      cadenaObjeto = cadenaObjeto+ " \n msg_end db 0 \n .code \n"+
+                                              "\n principal: \n"+ "\n"+
+                                              
+    "mov ax, @data \n"  +    "\n"+  
+    "mov ds, ax \n";
+                                     cadenaObjeto = cadenaObjeto+"\n"+    
+
+        "MOV DL,12"+"\n"+ "\n"+
+        "MOV AH,5"+"\n"+ "\n"+
+        "INT 21H"+"\n"+ "\n"+
+        
+          
+        "MOV CX,offset msg_end - offset mensaje1"+"\n"+ "\n"+
+        "MOV SI,OFFSET mensaje1"+"\n"+ "\n"+
+      " ifsi: " + "\n"+  "\n"+
+        "MOV DL,[SI]"+"\n"+ "\n"+
+        "MOV AH,5"+"\n"+ "\n"+
+        "INT 21H"+"\n"+ "\n"+
+            
+            "INC SI"+"\n"+ "\n"+
+    
+       " LOOP ifsi"  +"\n"+ "\n"+
+            
+        
+    
+    "MOV AX,4C00H"+"\n"+ "\n"+
+    "INT 21H"+"\n";
+                 }
+                 
+           
+         }
+   
+                 
+ 
+              
+                
+              
+ 
+      CampoIntermedio1.setText(cadenaObjeto);
+
+}
 
     public String id(String n) {
 
@@ -926,6 +1032,7 @@ public class Compilador extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea CampoIntermedio;
     private javax.swing.JTextArea CampoIntermedio1;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
