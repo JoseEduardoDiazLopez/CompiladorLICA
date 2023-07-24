@@ -40,7 +40,7 @@ cadena {return textColor(yychar, yylength(), new Color(6, 90, 158));  }
 torque | entero | potencia | rotacion | velocidad | presion | kilometraje | giro { return textColor(yychar, yylength(), new Color(6, 90, 158)); }
 flotante | tiempo | temperatura | aceleracion { return textColor(yychar, yylength(), new Color(6, 90, 158));  }
 fecha { /*Ignorar*/ }
-booleano { return textColor(yychar, yylength(), new Color(0,255, 255)); }
+booleano { return textColor(yychar, yylength(), new Color(6, 90, 158)); }
 
 // los valores booleanos
 verdadero | falso { return textColor(yychar, yylength(), new Color(0,255, 255)); }

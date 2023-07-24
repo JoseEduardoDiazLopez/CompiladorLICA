@@ -98,6 +98,9 @@ public class Compilador extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         CampoIntermedio = new javax.swing.JTextArea();
         jLabel2 = new javax.swing.JLabel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        CampoIntermedio1 = new javax.swing.JTextArea();
+        jLabel3 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu5 = new javax.swing.JMenu();
         jMenu1 = new javax.swing.JMenu();
@@ -147,7 +150,7 @@ public class Compilador extends javax.swing.JFrame {
         jScrollPane3.setViewportView(tblTokens);
 
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Codigo Intermedio");
+        jLabel1.setText("Codigo Objeto");
 
         CampoIntermedio.setEditable(false);
         CampoIntermedio.setBackground(new java.awt.Color(51, 51, 51));
@@ -158,6 +161,16 @@ public class Compilador extends javax.swing.JFrame {
 
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Errores:");
+
+        CampoIntermedio1.setEditable(false);
+        CampoIntermedio1.setBackground(new java.awt.Color(51, 51, 51));
+        CampoIntermedio1.setColumns(20);
+        CampoIntermedio1.setForeground(new java.awt.Color(255, 255, 255));
+        CampoIntermedio1.setRows(5);
+        jScrollPane5.setViewportView(CampoIntermedio1);
+
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("Codigo Intermedio");
 
         javax.swing.GroupLayout rootPanelLayout = new javax.swing.GroupLayout(rootPanel);
         rootPanel.setLayout(rootPanelLayout);
@@ -171,18 +184,23 @@ public class Compilador extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(rootPanelLayout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 503, Short.MAX_VALUE)
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabel2)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(rootPanelLayout.createSequentialGroup()
+                        .addComponent(jScrollPane2)
                         .addGap(12, 12, 12))
                     .addGroup(rootPanelLayout.createSequentialGroup()
                         .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(rootPanelLayout.createSequentialGroup()
+                                .addGap(9, 9, 9)
+                                .addComponent(jLabel3)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-            .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rootPanelLayout.createSequentialGroup()
-                    .addContainerGap(715, Short.MAX_VALUE)
-                    .addComponent(jLabel2)
-                    .addGap(466, 466, 466)))
         );
         rootPanelLayout.setVerticalGroup(
             rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -190,21 +208,22 @@ public class Compilador extends javax.swing.JFrame {
                 .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 339, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(rootPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(2, 2, 2)
-                        .addComponent(jScrollPane4)
-                        .addGap(22, 22, 22)))
+                        .addContainerGap()
+                        .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane5)
+                            .addComponent(jScrollPane4))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(rootPanelLayout.createSequentialGroup()
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
                         .addContainerGap())
                     .addComponent(jScrollPane2)))
-            .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rootPanelLayout.createSequentialGroup()
-                    .addContainerGap(333, Short.MAX_VALUE)
-                    .addComponent(jLabel2)
-                    .addGap(178, 178, 178)))
         );
 
         getContentPane().add(rootPanel);
@@ -745,7 +764,13 @@ public class Compilador extends javax.swing.JFrame {
         System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXx");
         System.out.println(codigo);
         System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXx");
-        String expregularnumero = "(//.*|\\}|for[\t\s]*\\([\t\s]*([0-9]+|\\_[A-Za-zÑñÁÉÍÓÚ]+)[\t\s]*\\))|(si[\t\s]*\\([\t\s]*([0-9]+|\\_[A-Za-zÑñÁÉÍÓÚ]+)[\t\s]*(>|<|>=|<=|==|!=)[\t\s]*([0-9]+|\\_[A-Za-zÑñÁÉÍÓÚ]+)[\t\s]*\\))|(\\_[A-Za-zÑñÁÉÍÓÚ]+[\t\s]*=[\t\s]*([0-9]+|\".*\"))";
+        //llaves removidas
+        String expregularnumero = "(for[\\t\\s]*\\([\\t\\s]*([0-9]+|\\_[A-Za-zÑñÁÉÍÓÚ]+)[\\t\\s]*\\))|"
+                + "(si[\\t\\s]*\\([\\t\\s]*([0-9]+|\\_[A-Za-zÑñÁÉÍÓÚ]+)[\\t\\s]*(>|<|>=|<=|==|!=)[\\t\\s]*([0-9]+|\\_[A-Za-zÑñÁÉÍÓÚ]+)[\\t\\s]*\\))|"
+                + "(\\_[A-Za-zÑñÁÉÍÓÚ]+[\\t\\s]*=[\\t\\s]*([0-9]+|\".*\"))|"
+                + "\\_[A-Za-zÑñÁÉÍÓÚ]+[\\t\\s]*=[\\t\\\\s]*\\_[A-Za-zÑñÁÉÍÓÚ]+[\\t\\s]*(\\+|\\-|\\*|\\/)[\\t\\s]*\\_[A-Za-zÑñÁÉÍÓÚ]+|"
+                + "(imprime\\('[^']*'\\))";
+                
         return matches(codigo,expregularnumero);
       
     }
@@ -795,6 +820,12 @@ public class Compilador extends javax.swing.JFrame {
                 cadena = cadena + "\n\n goto L1\n label L2\n\n";
                 If_For = "NoBucles";
             }
+              if (cad.contains("$") && Estado.equals("SiCodigo") && If_For.equals("for")) {
+                cadenaOpti = cadenaOpti + "\n\n goto L1\n label L2\n\n";
+                cadena = cadena + "\n\n goto L1\n label L2\n\n";
+                If_For = "NoBucles";
+            }
+              
             System.out.println("CadenaOptimazada\n" + Cadena[1]);
 
             ArrayList<Cuadruplo> cuadruplos = arbolExpresionArit.getCuadruplos();
@@ -804,9 +835,9 @@ public class Compilador extends javax.swing.JFrame {
                 String argu1 = cuadruplo.getArg1();
                 String argu2 = cuadruplo.getArg2();
                 String resul = cuadruplo.getR();
-                Object[] data = new Object[]{operador, argu1, argu2, resul};
+               
                 
-                System.out.println(operador + " " + argu1 + " " + argu2 + " " + resul);
+                System.out.println("*****************----"+operador + " " + argu1 + " " + argu2 + " " + resul);
             }
         }
         System.out.println("Tokens listos");
@@ -894,8 +925,10 @@ public class Compilador extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea CampoIntermedio;
+    private javax.swing.JTextArea CampoIntermedio1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
@@ -908,6 +941,7 @@ public class Compilador extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTextArea jtaOutputConsole;
     private javax.swing.JTextPane jtpCode;
     private javax.swing.JPanel rootPanel;
