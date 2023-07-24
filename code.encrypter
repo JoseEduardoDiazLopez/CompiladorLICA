@@ -1,15 +1,12 @@
 principal(){
-rango (2,34) 
-aceite[4]
+entero _velocidad=60
+entero _aire=50
+entero _torque=100
+entero _aceite=1
 
-entero _a=1 
-entero  _b=1
-torque _c = 2
-cadena _t = 'a'
-booleano _d = falso
+for(5)$
+_aire=40
+$
+si(_aceite+2):
 
-_a = _b / 0
-
-}
-
-
+imprime('falta de aceite') : }

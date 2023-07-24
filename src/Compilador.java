@@ -746,7 +746,7 @@ public class Compilador extends javax.swing.JFrame {
         System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXx");
         System.out.println(codigo);
         System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXx");
-      String expregularnumero ="(for[\t\s]*\\([\t\s]*([0-9]+|\\$[A-Za-zÑñÁÉÍÓÚ]+)[\t\s]*\\))|(si[\t\s]*\\([\t\s]*([0-9]+|\\$[A-Za-zÑñÁÉÍÓÚ]+)[\t\s]*(>|<|>=|<=|==|!=)[\t\s]*([0-9]+|\\$[A-Za-zÑñÁÉÍÓÚ]+)[\t\s]*\\))";
+        String expregularnumero = "(//.*|\\}|for[\t\s]*\\([\t\s]*([0-9]+|\\_[A-Za-zÑñÁÉÍÓÚ]+)[\t\s]*\\))|(if[\t\s]*\\([\t\s]*([0-9]+|\\_[A-Za-zÑñÁÉÍÓÚ]+)[\t\s]*(>|<|>=|<=|==|!=)[\t\s]*([0-9]+|\\_[A-Za-zÑñÁÉÍÓÚ]+)[\t\s]*\\))|(\\_[A-Za-zÑñÁÉÍÓÚ]+[\t\s]*=[\t\s]*([0-9]+|\".*\"))";
         return matches(codigo,expregularnumero);
       
     }
@@ -778,7 +778,7 @@ public class Compilador extends javax.swing.JFrame {
             // "\n goto L1\n label L2\n\n" ; 
             if (cad.contains("mientras")) {
                 If_For = "mientras";
-                if (Arre.get(a + 1).equals("$")) {
+                if (Arre.get(a + 1).equals("_")) {
                     cadenaOpti = cadenaOpti + "\n\n goto L1\n label L2\n\n";
                     cadena = cadena + "\n\n goto L1\n label L2\n\n";
                     Estado = "NoCodigo";
