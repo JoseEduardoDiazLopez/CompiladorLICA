@@ -174,11 +174,10 @@ public class Compilador extends javax.swing.JFrame {
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 503, Short.MAX_VALUE)
                         .addGap(12, 12, 12))
                     .addGroup(rootPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(rootPanelLayout.createSequentialGroup()
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 509, Short.MAX_VALUE)
-                        .addContainerGap())))
+                        .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(rootPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rootPanelLayout.createSequentialGroup()
                     .addContainerGap(715, Short.MAX_VALUE)
@@ -746,7 +745,7 @@ public class Compilador extends javax.swing.JFrame {
         System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXx");
         System.out.println(codigo);
         System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXx");
-        String expregularnumero = "(//.*|\\}|for[\t\s]*\\([\t\s]*([0-9]+|\\_[A-Za-zÑñÁÉÍÓÚ]+)[\t\s]*\\))|(if[\t\s]*\\([\t\s]*([0-9]+|\\_[A-Za-zÑñÁÉÍÓÚ]+)[\t\s]*(>|<|>=|<=|==|!=)[\t\s]*([0-9]+|\\_[A-Za-zÑñÁÉÍÓÚ]+)[\t\s]*\\))|(\\_[A-Za-zÑñÁÉÍÓÚ]+[\t\s]*=[\t\s]*([0-9]+|\".*\"))";
+        String expregularnumero = "(//.*|\\}|for[\t\s]*\\([\t\s]*([0-9]+|\\_[A-Za-zÑñÁÉÍÓÚ]+)[\t\s]*\\))|(si[\t\s]*\\([\t\s]*([0-9]+|\\_[A-Za-zÑñÁÉÍÓÚ]+)[\t\s]*(>|<|>=|<=|==|!=)[\t\s]*([0-9]+|\\_[A-Za-zÑñÁÉÍÓÚ]+)[\t\s]*\\))|(\\_[A-Za-zÑñÁÉÍÓÚ]+[\t\s]*=[\t\s]*([0-9]+|\".*\"))";
         return matches(codigo,expregularnumero);
       
     }
@@ -776,8 +775,8 @@ public class Compilador extends javax.swing.JFrame {
                 }
             }
             // "\n goto L1\n label L2\n\n" ; 
-            if (cad.contains("mientras")) {
-                If_For = "mientras";
+            if (cad.contains("for")) {
+                If_For = "for";
                 if (Arre.get(a + 1).equals("_")) {
                     cadenaOpti = cadenaOpti + "\n\n goto L1\n label L2\n\n";
                     cadena = cadena + "\n\n goto L1\n label L2\n\n";
@@ -791,7 +790,7 @@ public class Compilador extends javax.swing.JFrame {
                 cadena = cadena + "\n\n label L1\n";
                 If_For = "NoBucles";
             }
-            if (cad.contains("$") && Estado.equals("SiCodigo") && If_For.equals("mientras")) {
+            if (cad.contains("$") && Estado.equals("SiCodigo") && If_For.equals("for")) {
                 cadenaOpti = cadenaOpti + "\n\n goto L1\n label L2\n\n";
                 cadena = cadena + "\n\n goto L1\n label L2\n\n";
                 If_For = "NoBucles";
