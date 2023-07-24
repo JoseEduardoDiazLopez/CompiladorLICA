@@ -366,8 +366,9 @@ public class Compilador extends javax.swing.JFrame {
         semanticAnalysis();
        
         printConsole();
+        if(errors.isEmpty()){
          fillTablaCuadruplos();
-         llenarcodigoObjeto();
+         llenarcodigoObjeto();}
         codeHasBeenCompiled = true;
 
     }
@@ -1003,6 +1004,8 @@ public void llenarcodigoObjeto(){
     private void clearFields() {
         Functions.clearDataInTable(tblTokens);
         jtaOutputConsole.setText("");
+        CampoIntermedio.setText("");
+           CampoIntermedio1.setText("");
         tokens.clear();
         errors.clear();
         identProd.clear();
